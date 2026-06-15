@@ -8,8 +8,11 @@ in whiskers.db. resumable: re-running continues where it left off.
 Setup:
     ollama serve                  # in another terminal
     ollama pull qwen3:1.7b
-    python worker.py              # tag everything still untagged
+    python worker.py              # tag the delta (any untagged / freshly-added families)
     python worker.py --limit 20   # try a small batch first
+    python worker.py --status     # show coverage (corpus / tagged / delta), no tagging
+    python worker.py --full       # re-tag the whole corpus with the current model
+    python worker.py --watch 3600 # stay running; tag new families every hour
 """
 
 import argparse
@@ -89,8 +92,19 @@ def classify(name: str, desc: str) -> tuple[list[str], list[str]]:
     return list(dict.fromkeys(caps)), list(dict.fromkeys(secs))
 
 
-def _untagged(limit: int) -> list[sqlite3.Row]:
+def _pending(limit: int, full: bool = False) -> list[sqlite3.Row]:
+    """Families still to process.
+
+    Normal: those with no tag at all (the delta).
+    Full:   those not yet tagged by the CURRENT model — i.e. untagged OR tagged by
+            another model. Re-running --full resumes (re-tagged rows are skipped)."""
     with closing(_db()) as c:
+        if full:
+            return c.execute(
+                "SELECT name, data FROM families WHERE name NOT IN "
+                "(SELECT name FROM tags WHERE model = ?) LIMIT ?",
+                (MODEL, limit),
+            ).fetchall()
         return c.execute(
             "SELECT name, data FROM families "
             "WHERE name NOT IN (SELECT name FROM tags) LIMIT ?",
@@ -141,28 +155,26 @@ def _check_ollama() -> list[str] | None:
         return None
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser(description="whiskers local-LLM tagger")
-    ap.add_argument("--limit", type=int, default=1_000_000, help="max families this run")
-    ap.add_argument("--log-every", type=int, default=10, help="progress log cadence")
-    args = ap.parse_args()
+def _counts() -> tuple[int, int, int]:
+    """(corpus total, tagged, untagged delta)."""
+    with closing(_db()) as c:
+        total = c.execute("SELECT COUNT(*) FROM families").fetchone()[0]
+        tagged = c.execute("SELECT COUNT(*) FROM tags").fetchone()[0]
+        delta = c.execute(
+            "SELECT COUNT(*) FROM families WHERE name NOT IN (SELECT name FROM tags)"
+        ).fetchone()[0]
+    return total, tagged, delta
 
-    models = _check_ollama()
-    if models is None:
-        sys.exit(
-            f"[=^..^=] Ollama not reachable at {OLLAMA}.\n"
-            f"    Start it: `ollama serve`  then  `ollama pull {MODEL}`"
-        )
-    base = MODEL.split(":")[0]
-    if not any(m == MODEL or m.startswith(base) for m in models):
-        print(f"[=^..^=] note: {MODEL} not pulled yet ({models}). Run: ollama pull {MODEL}")
 
-    rows = _untagged(args.limit)
+def tag_pass(limit: int, log_every: int, full: bool = False) -> int:
+    """Tag up to `limit` pending families. Returns how many were processed."""
+    rows = _pending(limit, full)
     total = len(rows)
     if not total:
-        print("[=^..^=] nothing to tag - all families already enriched. =^..^=")
-        return
-    print(f"[=^..^=] tagging {total} families with {MODEL} (resumable, Ctrl-C safe)")
+        return 0
+    verb = "re-tagging" if full else "tagging"
+    print(f"[=^..^=] {verb} {total} famil{'y' if total == 1 else 'ies'} "
+          f"with {MODEL} (resumable, Ctrl-C safe)")
 
     live = sys.stdout.isatty()   # \r progress only on a real terminal, not in a logfile
     done, t0 = 0, time.time()
@@ -187,7 +199,7 @@ def main() -> None:
         done += 1
 
         # permanent record every --log-every (also the only output when piped to a file)
-        if done % args.log_every == 0:
+        if done % log_every == 0:
             rate = done / (time.time() - t0)
             eta = _fmt_dur((total - done) / rate if rate else 0)
             tagstr = (", ".join(caps + [f"⌖{s}" for s in secs])) or "-"
@@ -202,7 +214,63 @@ def main() -> None:
 
     if live:
         sys.stdout.write("\n")
-    print(f"[=^..^=] done: tagged {done} families in {_fmt_dur(time.time() - t0)}")
+    print(f"[=^..^=] done: tagged {done} in {_fmt_dur(time.time() - t0)}")
+    return done
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description="whiskers local-LLM tagger (tags new/untagged families)")
+    ap.add_argument("--limit", type=int, default=1_000_000, help="max families this run")
+    ap.add_argument("--log-every", type=int, default=10, help="progress log cadence")
+    ap.add_argument("--status", action="store_true", help="show tag coverage and exit")
+    ap.add_argument("--full", action="store_true",
+                    help="re-tag the whole corpus with the current model (overwrites; resumable)")
+    ap.add_argument("--watch", type=int, default=0, metavar="SECONDS",
+                    help="stay running; re-tag freshly-added families every N seconds")
+    args = ap.parse_args()
+
+    total, tagged, delta = _counts()
+
+    # --status: just report coverage, no Ollama needed.
+    if args.status:
+        print(f"[=^..^=] corpus={total}  tagged={tagged}  untagged delta={delta}")
+        with closing(_db()) as c:
+            for model, n in c.execute(
+                "SELECT model, COUNT(*) FROM tags GROUP BY model ORDER BY 2 DESC"
+            ):
+                print(f"    {n:>5}  {model}")
+        return
+
+    models = _check_ollama()
+    if models is None:
+        sys.exit(
+            f"[=^..^=] Ollama not reachable at {OLLAMA}.\n"
+            f"    Start it: `ollama serve`  then  `ollama pull {MODEL}`"
+        )
+    base = MODEL.split(":")[0]
+    if not any(m == MODEL or m.startswith(base) for m in models):
+        print(f"[=^..^=] note: {MODEL} not pulled yet ({models}). Run: ollama pull {MODEL}")
+
+    if args.full:
+        pending = len(_pending(10_000_000, full=True))
+        print(f"[=^..^=] full re-tag with {MODEL}: {pending}/{total} pending "
+              f"(families already on {MODEL} are skipped)")
+    else:
+        print(f"[=^..^=] corpus={total} · tagged={tagged} · delta={delta}")
+
+    # --watch: keep tagging whatever the corpus refresh adds over time.
+    if args.watch:
+        print(f"[=^..^=] watch mode: checking every {args.watch}s (Ctrl-C to stop)")
+        while True:
+            if tag_pass(args.limit, args.log_every, args.full) == 0:
+                print(f"[=^..^=] up to date - next check in {args.watch}s")
+            time.sleep(args.watch)
+
+    # one-shot.
+    if tag_pass(args.limit, args.log_every, args.full) == 0:
+        reason = ("all families already tagged by this model" if args.full
+                  else "delta is 0, all families already enriched")
+        print(f"[=^..^=] nothing to tag - {reason}. =^..^=")
 
 
 if __name__ == "__main__":

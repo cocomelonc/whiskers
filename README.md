@@ -130,19 +130,33 @@ loader, …) and **target sectors** (finance, healthcare, government, …), writ
 Those tags power the capability/sector chips and pivots.     
 
 ```bash
-python worker.py                # tag everything still untagged
+python worker.py                # tag the delta - any untagged / freshly-added families
 python worker.py --limit 20     # try a small batch first
+python worker.py --status       # coverage only: corpus / tagged / delta, no tagging
+python worker.py --full         # re-tag the whole corpus with the current model
 ```
 
 ![img](./img/worker.png)     
 
-It is resumable and `Ctrl-C` safe - it only processes families not yet tagged, so you can stop and
-restart freely. On a terminal you get a live progress bar with ETA; piped to a file it prints
+It is resumable and `Ctrl-C` safe - each run only processes families **not yet tagged**, so it
+naturally picks up the new families Malpedia adds over time. Just re-run it; `--status` shows how
+many are pending. On a terminal you get a live progress bar with ETA; piped to a file it prints
 periodic checkpoint lines instead. To run the full corpus unattended:      
 
 ```bash
 nohup python worker.py --log-every 25 > tag.log 2>&1 &
 tail -f tag.log
+```
+
+Switching models? `--full` re-tags the entire corpus with whatever `OLLAMA_MODEL` is set to. It's
+model-aware and resumable: it only re-tags families not already on the current model, so an
+interrupted run continues instead of starting over.
+
+To keep coverage current hands-off, leave it watching - it re-tags whatever the daily corpus
+refresh adds:      
+
+```bash
+python worker.py --watch 3600   # check for and tag new families every hour
 ```
 
 The worker is fully decoupled from the web app - run it whenever, the UI picks up tags as they land.    
