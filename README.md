@@ -119,7 +119,7 @@ These appear on the family card and run only when you click - a few seconds on C
 
 - **🧠 brief** - a tight SOC brief: what it is, primary risk, and two or three detection ideas. Cached after first generation.    
 - **🧠 explain rule** - plain-English explanation of a YARA rule and its false-positive risk; turns opaque auto-generated rules into something readable.    
-- **ask this family** - ask a question answered *only* from that family's data; it refuses ("Not stated in Malpedia data") rather than guess.   
+- **💬 ask this family** - ask a question answered *only* from that family's data; it refuses ("Not stated in Malpedia data") rather than guess.   
 
 If Ollama isn't running, these report it inline and the rest of whiskers is unaffected.    
 
