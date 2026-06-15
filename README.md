@@ -7,6 +7,8 @@ corpus full-text, read a tactical card per family, pivot by threat actor or capa
 recent-activity reports, export detection content, and - optionally - enrich and explain it all
 with a **local LLM running on your own CPU/GPU**. No cloud, no build step, no Node.    
 
+![img](./img/frontend.png)     
+
 Tactical, fast, offline-friendly. Subtle cat vibes in the logs.     
 
 ---
@@ -131,6 +133,8 @@ Those tags power the capability/sector chips and pivots.
 python worker.py                # tag everything still untagged
 python worker.py --limit 20     # try a small batch first
 ```
+
+![img](./img/worker.png)     
 
 It is resumable and `Ctrl-C` safe - it only processes families not yet tagged, so you can stop and
 restart freely. On a terminal you get a live progress bar with ETA; piped to a file it prints
