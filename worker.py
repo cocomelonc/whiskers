@@ -21,6 +21,7 @@ import os
 import sqlite3
 import sys
 import time
+import urllib.error
 import urllib.request
 from contextlib import closing
 from datetime import datetime, timezone
@@ -66,8 +67,16 @@ def _ollama_chat(prompt: str) -> str:
         f"{OLLAMA}/api/chat", data=body,
         headers={"Content-Type": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=180) as r:
-        return json.loads(r.read())["message"]["content"]
+    try:
+        with urllib.request.urlopen(req, timeout=180) as r:
+            return json.loads(r.read())["message"]["content"]
+    except urllib.error.HTTPError as e:
+        detail = ""
+        try:
+            detail = (json.loads(e.read()).get("error") or "")[:300]
+        except Exception:
+            pass
+        raise RuntimeError(f"ollama HTTP {e.code}: {detail or e.reason}") from None
 
 
 def classify(name: str, desc: str) -> tuple[list[str], list[str]]:
@@ -96,7 +105,7 @@ def _pending(limit: int, full: bool = False) -> list[sqlite3.Row]:
     """Families still to process.
 
     Normal: those with no tag at all (the delta).
-    Full:   those not yet tagged by the CURRENT model — i.e. untagged OR tagged by
+    Full:   those not yet tagged by the CURRENT model - i.e. untagged OR tagged by
             another model. Re-running --full resumes (re-tagged rows are skipped)."""
     with closing(_db()) as c:
         if full:
@@ -177,7 +186,7 @@ def tag_pass(limit: int, log_every: int, full: bool = False) -> int:
           f"with {MODEL} (resumable, Ctrl-C safe)")
 
     live = sys.stdout.isatty()   # \r progress only on a real terminal, not in a logfile
-    done, t0 = 0, time.time()
+    done, t0, llm_fails = 0, time.time(), 0
     for r in rows:
         name = r["name"]
         meta = json.loads(r["data"])
@@ -188,12 +197,22 @@ def tag_pass(limit: int, log_every: int, full: bool = False) -> int:
         else:
             try:
                 caps, secs = classify(name, desc)
+                llm_fails = 0
             except KeyboardInterrupt:
                 raise
             except Exception as exc:
                 if live:
                     sys.stdout.write("\r" + " " * 90 + "\r")
                 print(f"  ! {name}: {exc}")
+                llm_fails += 1
+                if llm_fails >= 10:
+                    print(f"\n[=^..^=] aborting: {llm_fails} model calls failed in a row - "
+                          f"the model/Ollama is unhealthy, not your data.\n"
+                          f"[=^..^=] test it:  ollama run {MODEL} \"hi\"\n"
+                          f"[=^..^=] then:     curl {OLLAMA}/api/tags   (is it up?)\n"
+                          f"[=^..^=] re-pull:  ollama pull {MODEL}\n"
+                          f"[=^..^=] already-done tags are saved; fix the model and re-run.")
+                    break
                 continue
             _save(name, caps, secs)
         done += 1
