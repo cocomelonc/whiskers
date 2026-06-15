@@ -77,6 +77,11 @@ keeps working. The header badge reflects your state - `● member` or `○ anony
 actors, and report references. Search by concept (`amsi bypass`), by actor (`TA505`), or by a
 citation domain - matched terms are highlighted in the result snippet.    
 
+**Semantic search** - flip the search mode to `🧬 semantic` to search by *meaning* over embedded
+descriptions: "android banking trojan stealing credentials" surfaces the right families even with
+zero keyword overlap. Vectors are precomputed once (GPU); a query embeds in ~50 ms on CPU. Each
+family card also shows a precomputed **similar families** list - zero query-time cost.    
+
 **Family card** - canonical name, aliases, description, attribution, references, the full YARA
 rule text, and known samples. Threat-actor and capability tags are clickable.    
 
@@ -132,9 +137,15 @@ Those tags power the capability/sector chips and pivots.
 ```bash
 python worker.py                # tag the delta - any untagged / freshly-added families
 python worker.py --limit 20     # try a small batch first
-python worker.py --status       # coverage only: corpus / tagged / delta, no tagging
+python worker.py --status       # coverage only: corpus / tagged / delta / embedded
 python worker.py --full         # re-tag the whole corpus with the current model
+python worker.py --embed        # build semantic-search vectors (the GPU feature)
 ```
+
+`--embed` is the GPU-precompute side of semantic search: run it once on a GPU box to vectorize the
+whole corpus (`OLLAMA_EMBED_MODEL`, default `nomic-embed-text`), and the web app serves
+concept-search and "similar families" cheaply on CPU. Like tagging, it's resumable and picks up
+only families without a vector.
 
 ![img](./img/worker.png)     
 

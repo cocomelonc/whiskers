@@ -5,17 +5,19 @@ Tags every Malpedia family with capabilities + target sectors using a small
 local model via Ollama (default qwen3:1.7b on CPU). Writes to the `tags` table
 in whiskers.db. resumable: re-running continues where it left off.
 
-Setup:
+setup:
     ollama serve                  # in another terminal
     ollama pull qwen3:1.7b
     python worker.py              # tag the delta (any untagged / freshly-added families)
     python worker.py --limit 20   # try a small batch first
     python worker.py --status     # show coverage (corpus / tagged / delta), no tagging
     python worker.py --full       # re-tag the whole corpus with the current model
+    python worker.py --embed      # build semantic-search vectors (GPU feature)
     python worker.py --watch 3600 # stay running; tag new families every hour
 """
 
 import argparse
+import array
 import json
 import os
 import sqlite3
@@ -33,6 +35,7 @@ load_dotenv()
 DB_PATH = os.getenv("WHISKERS_DB", "whiskers.db")
 OLLAMA  = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 MODEL   = os.getenv("OLLAMA_MODEL", "qwen3:1.7b")
+EMBED_MODEL = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
 
 # closed vocabularies - the model must pick only from these.
 CAPABILITIES = [
@@ -130,6 +133,88 @@ def _save(name: str, caps: list, secs: list) -> None:
              datetime.now(timezone.utc).isoformat(timespec="seconds")),
         )
         c.commit()
+
+
+# -- embeddings (GPU feature: --embed) -----------------------------
+
+def _embed_vec(text: str) -> bytes:
+    """Embed text via Ollama; return raw float32 bytes (normalized at load time)."""
+    body = json.dumps({"model": EMBED_MODEL, "prompt": text[:2000]}).encode()
+    req = urllib.request.Request(
+        f"{OLLAMA}/api/embeddings", data=body,
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            vec = json.loads(r.read())["embedding"]
+    except urllib.error.HTTPError as e:
+        detail = ""
+        try:
+            detail = (json.loads(e.read()).get("error") or "")[:300]
+        except Exception:
+            pass
+        raise RuntimeError(f"ollama HTTP {e.code}: {detail or e.reason}") from None
+    return array.array("f", vec).tobytes()
+
+
+def _unembedded(limit: int) -> list[sqlite3.Row]:
+    with closing(_db()) as c:
+        c.execute("CREATE TABLE IF NOT EXISTS embeddings(name TEXT PRIMARY KEY, vec BLOB)")
+        return c.execute(
+            "SELECT name, data FROM families "
+            "WHERE name NOT IN (SELECT name FROM embeddings) LIMIT ?",
+            (limit,),
+        ).fetchall()
+
+
+def embed_pass(limit: int, log_every: int) -> int:
+    """Generate embeddings for families that don't have one yet. Resumable."""
+    rows = _unembedded(limit)
+    total = len(rows)
+    if not total:
+        return 0
+    print(f"[=^..^=] embedding {total} famil{'y' if total == 1 else 'ies'} "
+          f"with {EMBED_MODEL} (resumable, Ctrl-C safe)")
+
+    live = sys.stdout.isatty()
+    done, t0, fails = 0, time.time(), 0
+    for r in rows:
+        name = r["name"]
+        meta = json.loads(r["data"])
+        text = f"{meta.get('common_name') or ''} {meta.get('description') or ''}".strip() or name
+        try:
+            blob = _embed_vec(text)
+            fails = 0
+        except KeyboardInterrupt:
+            raise
+        except Exception as exc:
+            if live:
+                sys.stdout.write("\r" + " " * 90 + "\r")
+            print(f"  ! {name}: {exc}")
+            fails += 1
+            if fails >= 10:
+                print(f"\n[=^..^=] aborting: {fails} embed calls failed in a row - "
+                      f"check `ollama run {EMBED_MODEL}` / `ollama pull {EMBED_MODEL}`.")
+                break
+            continue
+        with closing(_db()) as c:
+            c.execute("INSERT OR REPLACE INTO embeddings(name, vec) VALUES(?,?)", (name, blob))
+            c.commit()
+        done += 1
+        if done % log_every == 0:
+            rate = done / (time.time() - t0)
+            eta = _fmt_dur((total - done) / rate if rate else 0)
+            if live:
+                sys.stdout.write("\r" + " " * 90 + "\r")
+            print(f"  ✓ {done:>5}/{total}  {done / total * 100:4.1f}%  {rate:.2f}/s  eta {eta:>6}  | {name}")
+        if live:
+            sys.stdout.write(_progress_line(done, total, t0, name))
+            sys.stdout.flush()
+
+    if live:
+        sys.stdout.write("\n")
+    print(f"[=^..^=] done: embedded {done} in {_fmt_dur(time.time() - t0)}")
+    return done
 
 
 def _fmt_dur(sec: float) -> str:
@@ -244,15 +329,20 @@ def main() -> None:
     ap.add_argument("--status", action="store_true", help="show tag coverage and exit")
     ap.add_argument("--full", action="store_true",
                     help="re-tag the whole corpus with the current model (overwrites; resumable)")
+    ap.add_argument("--embed", action="store_true",
+                    help="generate semantic-search embeddings (GPU feature; uses OLLAMA_EMBED_MODEL)")
     ap.add_argument("--watch", type=int, default=0, metavar="SECONDS",
-                    help="stay running; re-tag freshly-added families every N seconds")
+                    help="stay running; process freshly-added families every N seconds")
     args = ap.parse_args()
 
     total, tagged, delta = _counts()
 
     # --status: just report coverage, no Ollama needed.
     if args.status:
-        print(f"[=^..^=] corpus={total}  tagged={tagged}  untagged delta={delta}")
+        with closing(_db()) as c:
+            embedded = c.execute("SELECT COUNT(*) FROM embeddings").fetchone()[0] \
+                if c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='embeddings'").fetchone() else 0
+        print(f"[=^..^=] corpus={total}  tagged={tagged}  delta={delta}  embedded={embedded}")
         with closing(_db()) as c:
             for model, n in c.execute(
                 "SELECT model, COUNT(*) FROM tags GROUP BY model ORDER BY 2 DESC"
@@ -266,6 +356,21 @@ def main() -> None:
             f"[=^..^=] Ollama not reachable at {OLLAMA}.\n"
             f"    Start it: `ollama serve`  then  `ollama pull {MODEL}`"
         )
+
+    # --embed: GPU feature - build semantic-search vectors, then exit.
+    if args.embed:
+        if not any(m == EMBED_MODEL or m.startswith(EMBED_MODEL.split(":")[0]) for m in models):
+            print(f"[=^..^=] note: {EMBED_MODEL} not pulled. Run: ollama pull {EMBED_MODEL}")
+        if args.watch:
+            print(f"[=^..^=] embed watch: every {args.watch}s (Ctrl-C to stop)")
+            while True:
+                if embed_pass(args.limit, args.log_every) == 0:
+                    print(f"[=^..^=] embeddings up to date - next check in {args.watch}s")
+                time.sleep(args.watch)
+        if embed_pass(args.limit, args.log_every) == 0:
+            print("[=^..^=] nothing to embed - all families already vectorized. =^..^=")
+        return
+
     base = MODEL.split(":")[0]
     if not any(m == MODEL or m.startswith(base) for m in models):
         print(f"[=^..^=] note: {MODEL} not pulled yet ({models}). Run: ollama pull {MODEL}")

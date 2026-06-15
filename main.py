@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager, closing
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
+import numpy as np
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
@@ -36,6 +37,7 @@ KEEP_REPORTS = 60  # history cap per stored monitor run
 # Local LLM (Ollama) - same model the worker uses; CPU-friendly, on-demand only.
 OLLAMA_HOST  = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:1.7b")
+OLLAMA_EMBED_MODEL = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
 
 
 def _ollama(prompt: str, max_tokens: int = 320, temperature: float = 0.2) -> str:
@@ -104,6 +106,10 @@ def init_db() -> None:
             CREATE TABLE IF NOT EXISTS briefs(
                 name TEXT PRIMARY KEY,
                 text TEXT, model TEXT, created TEXT
+            );
+            CREATE TABLE IF NOT EXISTS embeddings(
+                name TEXT PRIMARY KEY,
+                vec BLOB           -- float32 vector (see worker.py --embed)
             );
             CREATE VIRTUAL TABLE IF NOT EXISTS search USING fts5(
                 name, common_name, aliases, description, attribution, refs,
@@ -211,6 +217,87 @@ def search_corpus(q: str, limit: int = 40) -> list[dict[str, Any]]:
             "updated": r["updated"],
         })
     return out
+
+
+# -- semantic search (embeddings; vectors precomputed by worker.py --embed) ----
+
+_EMB_NAMES: list[str] = []
+_EMB_MAT: np.ndarray | None = None   # (N, D), L2-normalized
+
+
+def load_embeddings() -> None:
+    """Load precomputed vectors into memory (normalized). Cheap; no model needed."""
+    global _EMB_NAMES, _EMB_MAT
+    with closing(_db()) as c:
+        rows = c.execute("SELECT name, vec FROM embeddings").fetchall()
+    if not rows:
+        _EMB_NAMES, _EMB_MAT = [], None
+        return
+    _EMB_NAMES = [r["name"] for r in rows]
+    mat = np.vstack([np.frombuffer(r["vec"], dtype=np.float32) for r in rows])
+    norms = np.linalg.norm(mat, axis=1, keepdims=True)
+    _EMB_MAT = mat / np.where(norms == 0, 1.0, norms)
+    log.info("[=^..^=] embeddings loaded: %d vectors", len(_EMB_NAMES))
+
+
+def _embed_query(text: str) -> np.ndarray:
+    """Embed a short query string via Ollama (tiny model, fine on CPU)."""
+    body = json.dumps({"model": OLLAMA_EMBED_MODEL, "prompt": text}).encode()
+    req = urllib.request.Request(
+        f"{OLLAMA_HOST}/api/embeddings", data=body,
+        headers={"Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=60) as r:
+        v = np.array(json.loads(r.read())["embedding"], dtype=np.float32)
+    n = np.linalg.norm(v)
+    return v / n if n else v
+
+
+def _results_for(names: list[str]) -> list[dict[str, Any]]:
+    """Build result cards for an ordered list of family names (preserving order)."""
+    if not names:
+        return []
+    rows_by: dict[str, sqlite3.Row] = {}
+    with closing(_db()) as c:
+        q = ",".join("?" * len(names))
+        for r in c.execute(
+            f"SELECT f.name, f.common_name, f.updated, f.data, "
+            f"t.capabilities AS caps, t.sectors AS secs FROM families f "
+            f"LEFT JOIN tags t ON t.name = f.name WHERE f.name IN ({q})", names
+        ):
+            rows_by[r["name"]] = r
+    out = []
+    for name in names:
+        r = rows_by.get(name)
+        if not r:
+            continue
+        meta = json.loads(r["data"])
+        caps, secs = _tags(r["caps"], r["secs"])
+        out.append({
+            "name": r["name"], "common_name": r["common_name"],
+            "aliases": meta.get("alt_names") or [],
+            "attribution": meta.get("attribution") or [],
+            "capabilities": caps, "sectors": secs, "updated": r["updated"],
+        })
+    return out
+
+
+def semantic_search(q: str, limit: int = 40) -> list[dict[str, Any]]:
+    if _EMB_MAT is None:
+        return []
+    scores = _EMB_MAT @ _embed_query(q)
+    top = np.argsort(-scores)[:limit]
+    return _results_for([_EMB_NAMES[i] for i in top])
+
+
+def similar_families(name: str, limit: int = 8) -> list[dict[str, Any]]:
+    if _EMB_MAT is None or name not in _EMB_NAMES:
+        return []
+    i = _EMB_NAMES.index(name)
+    scores = _EMB_MAT @ _EMB_MAT[i]
+    scores[i] = -1.0   # drop self
+    top = np.argsort(-scores)[:limit]
+    return _results_for([_EMB_NAMES[j] for j in top])
 
 
 # -- reports -------------------------------------------------------
@@ -377,6 +464,7 @@ async def lifespan(app: FastAPI):
     else:
         log.info("[=^..^=] corpus has %d families - refreshing in background", _corpus_size())
         asyncio.create_task(asyncio.to_thread(refresh_corpus))
+    load_embeddings()
 
     sched = AsyncIOScheduler(timezone="UTC")
     sched.add_job(monitor, "cron", args=["day"],   hour=8,  id="daily")
@@ -404,6 +492,23 @@ def search(q: str = Query(..., min_length=1)):
     log.info("[=^..^=] full-text hunt: %s", q.strip())
     results = search_corpus(q.strip())
     return {"query": q.strip(), "results": results, "count": len(results)}
+
+
+@app.get("/api/semantic")
+def semantic(q: str = Query(..., min_length=1)):
+    if _EMB_MAT is None:
+        raise HTTPException(status_code=503, detail="no embeddings yet - run: python worker.py --embed")
+    log.info("[=^..^=] semantic hunt: %s", q.strip())
+    try:
+        results = semantic_search(q.strip())
+    except urllib.error.URLError as exc:
+        raise HTTPException(status_code=503, detail=f"embed model unavailable at {OLLAMA_HOST}: {exc}")
+    return {"query": q.strip(), "results": results, "count": len(results), "mode": "semantic"}
+
+
+@app.get("/api/similar/{name:path}")
+def similar(name: str):
+    return {"name": name, "families": similar_families(name)}
 
 
 @app.get("/api/report")

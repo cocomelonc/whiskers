@@ -288,6 +288,24 @@
     }
     .sub-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
+    .mode-btn {
+      font-size: 0.64rem;
+      padding: 3px 9px;
+      border-radius: 7px;
+      background: transparent;
+      border: 1px solid var(--sep);
+      color: var(--dim);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .mode-btn:hover { color: var(--text2); }
+    .mode-btn.active {
+      color: var(--purple);
+      border-color: rgba(181,123,255,0.45);
+      background: rgba(181,123,255,0.1);
+    }
+
     /* scanline overlay */
     body::after {
       content: '';
@@ -337,7 +355,12 @@
         />
         <button type="submit" id="search-btn" class="search-btn">🐾 hunt</button>
       </form>
-      <div id="status" style="margin-top: 9px; height: 16px; font-size: 0.7rem; color: var(--dim);"></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:9px;">
+        <span class="label" style="margin:0;">mode</span>
+        <button class="mode-btn active" data-mode="keyword" title="exact full-text (FTS5)">🔤 keyword</button>
+        <button class="mode-btn" data-mode="semantic" title="search by meaning (embeddings)">🧬 semantic</button>
+        <div id="status" style="margin-left:auto;font-size:0.7rem;color:var(--dim);"></div>
+      </div>
     </section>
 
     <!-- Reports card -->
@@ -608,6 +631,7 @@
           <hr class="divider" />
 
           <div id="brief-box"></div>
+          <div id="similar-box"></div>
 
           ${section('aliases',
             `<div style="display:flex;flex-wrap:wrap;gap:6px;">${pills(aliases, 'pill-purple')}</div>`
@@ -753,6 +777,9 @@
         flashCopy(e.target, hashes, '⧉ hashes');
       });
 
+      // similar families (semantic, no model needed - auto-load, cheap)
+      loadSimilar(name);
+
       // local-LLM: SOC brief
       $('brief-btn').addEventListener('click', (e) => {
         e.target.disabled = true;
@@ -785,6 +812,28 @@
     async function llmError(res) {
       const e = await res.json().catch(() => ({}));
       return e.detail || `${res.status} ${res.statusText}`;
+    }
+
+    async function loadSimilar(name) {
+      const box = $('similar-box');
+      if (!box) return;
+      try {
+        const res = await fetch(`/api/similar/${encodeURIComponent(name)}`);
+        if (!res.ok) return;
+        const d = await res.json();
+        if (!d.families?.length) return;   // no embeddings → just stay hidden
+        box.innerHTML = `
+          <div style="padding:18px 24px;">
+            <div class="label" style="margin-bottom:10px;">🧬 similar families · semantic</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              ${d.families.map(f => `<button class="pill pill-cyan" data-family="${esc(f.name)}" style="cursor:pointer;font-family:var(--font);" title="${esc(f.common_name || '')}">${esc(f.name)}</button>`).join('')}
+            </div>
+          </div>
+          <hr class="divider" />`;
+        box.querySelectorAll('[data-family]').forEach(b =>
+          b.addEventListener('click', () => loadFamily(b.dataset.family))
+        );
+      } catch { /* embeddings optional */ }
     }
 
     async function loadBrief(name) {
@@ -981,20 +1030,29 @@
 
     let _lastResults = null;
 
+    let searchMode = 'keyword';
+
     async function doSearch(query) {
       _lastResults = null;
       setContent(skeletonRows(5));
-      setStatus('hunting…');
+      setStatus(searchMode === 'semantic' ? 'thinking…' : 'hunting…');
       searchBtn.disabled = true;
 
+      const url = searchMode === 'semantic'
+        ? `/api/semantic?q=${encodeURIComponent(query)}`
+        : `/api/search?q=${encodeURIComponent(query)}`;
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const res = await fetch(url);
+        if (!res.ok) {
+          const e = await res.json().catch(() => ({}));
+          throw new Error(e.detail || `${res.status} ${res.statusText}`);
+        }
         const data = await res.json();
         _lastResults = data;
+        const tag = searchMode === 'semantic' ? ' (semantic)' : '';
         setStatus(data.count
-          ? `${data.count} result${data.count !== 1 ? 's' : ''} for "${query}"`
-          : `no results for "${query}"`
+          ? `${data.count} result${data.count !== 1 ? 's' : ''} for "${query}"${tag}`
+          : `no results for "${query}"${tag}`
         );
         renderResults(data);
       } catch (err) {
@@ -1094,6 +1152,16 @@
 
     document.querySelectorAll('[data-window]').forEach(btn =>
       btn.addEventListener('click', () => loadReport(btn.dataset.window))
+    );
+
+    // search mode toggle (keyword / semantic)
+    document.querySelectorAll('[data-mode]').forEach(btn =>
+      btn.addEventListener('click', () => {
+        searchMode = btn.dataset.mode;
+        document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b === btn));
+        const q = searchInput.value.trim();
+        if (q) doSearch(q);   // re-run current query in the new mode
+      })
     );
 
     document.addEventListener('keydown', e => {
