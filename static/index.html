@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>whiskers - threat intel</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg:      #15121E;
+      --bg2:     #1E1B2E;
+      --bg3:     #272440;
+      --bg4:     #312D52;
+      --sep:     #3D3860;
+      --text:    #EAE6FF;
+      --text2:   rgba(234,230,255,.65);
+      --dim:     #8A85A8;
+      --purple:  #B57BFF;
+      --blue:    #78B4FF;
+      --green:   #56D98A;
+      --red:     #FF7875;
+      --yellow:  #FFD166;
+      --orange:  #FFB347;
+      --cyan:    #72D9F5;
+      --pink:    #FF8FAD;
+      --font:    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+      --mono:    'SF Mono', 'Fira Code', 'Courier New', monospace;
+      --radius:  10px;
+      --radius-lg: 14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* - scrollbar - */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--sep); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+    /* - utilities - */
+    .label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--sep);
+    }
+
+    /* - logo - */
+    .logo-gradient {
+      background: linear-gradient(120deg, var(--purple) 0%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.03em;
+    }
+
+    /* - search input - */
+    .search-input {
+      flex: 1;
+      height: 48px;
+      background: var(--bg2);
+      border: 1px solid var(--sep);
+      border-radius: var(--radius);
+      padding: 0 16px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .search-input::placeholder { color: var(--dim); }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(181,123,255,0.15);
+    }
+
+    /* - search button - */
+    .search-btn {
+      height: 48px;
+      padding: 0 22px;
+      background: rgba(181,123,255,0.1);
+      border: 1px solid rgba(181,123,255,0.3);
+      border-radius: var(--radius);
+      color: var(--purple);
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-btn:hover:not(:disabled) {
+      background: rgba(181,123,255,0.18);
+      border-color: rgba(181,123,255,0.6);
+      box-shadow: 0 0 18px rgba(181,123,255,0.12);
+    }
+    .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* - cards - */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--sep);
+      border-radius: var(--radius-lg);
+    }
+
+    .result-card {
+      background: var(--bg2);
+      border: 1px solid var(--sep);
+      border-radius: var(--radius);
+      width: 100%;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+      min-height: 56px;
+    }
+    .result-card:hover {
+      background: var(--bg3);
+      border-color: rgba(181,123,255,0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(181,123,255,0.07);
+    }
+
+    /* - pills - */
+    .pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      padding: 2px 9px;
+      border-radius: 9999px;
+      line-height: 1.65;
+      white-space: nowrap;
+    }
+    .pill-purple { background: rgba(181,123,255,0.12); border: 1px solid rgba(181,123,255,0.28); color: var(--purple); }
+    .pill-pink   { background: rgba(255,143,173,0.1);  border: 1px solid rgba(255,143,173,0.25); color: var(--pink);   }
+    .pill-cyan   { background: rgba(114,217,245,0.1);  border: 1px solid rgba(114,217,245,0.25); color: var(--cyan);   }
+    .pill-orange { background: rgba(255,179,71,0.1);   border: 1px solid rgba(255,179,71,0.25);  color: var(--orange); }
+    .pill-green  { background: rgba(86,217,138,0.1);   border: 1px solid rgba(86,217,138,0.25);  color: var(--green);  }
+
+    /* - back button - */
+    .btn-back {
+      font-size: 0.72rem;
+      color: var(--dim);
+      background: transparent;
+      border: 1px solid var(--sep);
+      border-radius: 8px;
+      padding: 5px 12px;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-back:hover { color: var(--purple); border-color: rgba(181,123,255,0.4); }
+
+    /* - local-LLM widgets - */
+    .llm-box {
+      background: rgba(181,123,255,0.06);
+      border: 1px solid rgba(181,123,255,0.25);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .llm-btn {
+      font-size: 0.68rem;
+      color: var(--purple);
+      background: rgba(181,123,255,0.1);
+      border: 1px solid rgba(181,123,255,0.3);
+      border-radius: 7px;
+      padding: 5px 11px;
+      cursor: pointer;
+      font-family: var(--font);
+      white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .llm-btn:hover:not(:disabled) { background: rgba(181,123,255,0.2); border-color: rgba(181,123,255,0.55); }
+    .llm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .llm-out { margin-top: 8px; font-size: 0.79rem; color: var(--text2); line-height: 1.65; white-space: pre-wrap; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: inline-block; width: 11px; height: 11px;
+      border: 2px solid var(--sep); border-top-color: var(--purple);
+      border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: -1px;
+    }
+
+    /* - mono blocks - */
+    .mono-block {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--dim);
+      background: var(--bg);
+      border: 1px solid var(--sep);
+      border-radius: 8px;
+      padding: 10px 14px;
+      overflow-x: auto;
+      line-height: 1.7;
+    }
+
+    /* - links - */
+    .ref-link {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--blue);
+      text-decoration: none;
+      word-break: break-all;
+      transition: color 0.15s;
+    }
+    .ref-link:hover { color: var(--cyan); text-decoration: underline; }
+
+    /* - skeleton - */
+    @keyframes shimmer {
+      from { background-position: -700px 0; }
+      to   { background-position:  700px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg2) 25%, var(--bg3) 50%, var(--bg2) 75%);
+      background-size: 700px 100%;
+      animation: shimmer 1.5s infinite linear;
+      border-radius: 5px;
+    }
+
+    /* - fade-in - */
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fadein { animation: fadein 0.28s ease both; }
+
+    /* - details/summary - */
+    details > summary { list-style: none; cursor: pointer; user-select: none; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* - stable content pane - */
+    #content {
+      width: 100%;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* - subscription buttons - */
+    .sub-btn {
+      height: 34px;
+      padding: 0 14px;
+      background: rgba(114,217,245,0.07);
+      border: 1px solid rgba(114,217,245,0.2);
+      border-radius: 8px;
+      color: var(--cyan);
+      font-family: var(--font);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    .sub-btn:hover:not(:disabled) {
+      background: rgba(114,217,245,0.14);
+      border-color: rgba(114,217,245,0.45);
+      box-shadow: 0 0 14px rgba(114,217,245,0.1);
+    }
+    .sub-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* scanline overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 3px,
+        rgba(0,0,0,0.025) 3px,
+        rgba(0,0,0,0.025) 4px
+      );
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ Header ══════════════════════════════════════════════ -->
+  <header style="border-bottom: 1px solid var(--sep); padding: 14px 0; flex-shrink: 0;">
+    <div style="max-width: 880px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 9px;">
+        <span style="font-size: 1.15rem; line-height: 1;">😺</span>
+        <span class="logo-gradient">whiskers</span>
+        <span style="color: var(--sep); font-size: 0.8rem; margin: 0 2px;">/</span>
+        <span style="color: var(--dim); font-size: 0.68rem; letter-spacing: 0.02em;">threat intel</span>
+      </div>
+      <span id="auth-badge" style="color: var(--sep); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;">malpedia</span>
+    </div>
+  </header>
+
+  <!-- ══ Main ════════════════════════════════════════════════ -->
+  <main style="flex: 1; width: 100%; max-width: 880px; margin: 0 auto; padding: 36px 28px 28px;">
+
+    <!-- Search -->
+    <section style="margin-bottom: 6px;">
+      <div class="label" style="margin-bottom: 10px;">full-text search · families · aliases · actors · reports</div>
+      <form id="search-form" style="display: flex; gap: 10px;" autocomplete="off">
+        <input
+          id="search-input"
+          class="search-input"
+          type="text"
+          name="q"
+          placeholder="emotet · lazarus · amsi bypass · ransomware · TA505…"
+          spellcheck="false"
+        />
+        <button type="submit" id="search-btn" class="search-btn">🐾 hunt</button>
+      </form>
+      <div id="status" style="margin-top: 9px; height: 16px; font-size: 0.7rem; color: var(--dim);"></div>
+    </section>
+
+    <!-- Reports card -->
+    <div class="card" style="margin-top: 14px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+      <div style="min-width: 0;">
+        <div class="label" style="margin-bottom: 3px;">recent activity reports</div>
+        <p style="font-size: 0.75rem; color: var(--text2); margin: 0;">
+          families updated on Malpedia in the last…
+        </p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 7px; flex-wrap: wrap; flex-shrink: 0;">
+        <button class="sub-btn" data-window="day">📅 Day</button>
+        <button class="sub-btn" data-window="week">📆 Week</button>
+        <button class="sub-btn" data-window="month">📆 Month</button>
+      </div>
+    </div>
+
+    <!-- Content pane -->
+    <div id="content" style="margin-top: 12px;">
+
+      <!-- Default empty state -->
+      <div id="empty-placeholder" class="card" style="
+        min-height: 340px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      ">
+        <span style="font-size: 2rem; opacity: 0.25;">🐾</span>
+        <span style="color: var(--dim); font-size: 0.82rem;">search Malpedia, or pull a recent activity report</span>
+        <span style="color: var(--sep); font-size: 0.65rem; letter-spacing: 0.04em;">full-text · families · actors · reports</span>
+        <div id="browse-tags" style="display:none;flex-direction:column;align-items:center;gap:8px;margin-top:18px;max-width:560px;">
+          <span class="label">browse by capability</span>
+          <div id="browse-tags-row" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══ Footer ══════════════════════════════════════════════ -->
+  <footer style="border-top: 1px solid var(--sep); padding: 14px 0; flex-shrink: 0;">
+    <div style="max-width: 880px; margin: 0 auto; padding: 0 28px; text-align: center; display:flex; flex-direction:column; gap:3px;">
+      <span style="color: var(--sep); font-size: 0.62rem; letter-spacing: 0.06em;">
+        whiskers - low-noise threat intel - meow =^..^=
+      </span>
+      <span style="color: var(--dim); font-size: 0.62rem; letter-spacing: 0.06em;">
+        powered by <span style="color:var(--purple);">cocomelonc</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ══ Script ══════════════════════════════════════════════ -->
+  <script>
+  (() => {
+    'use strict';
+
+    const $ = id => document.getElementById(id);
+
+    const content     = $('content');
+    const statusEl    = $('status');
+    const searchBtn   = $('search-btn');
+    const searchInput = $('search-input');
+
+    // - helpers ------------------------
+
+    const setStatus = msg => { statusEl.textContent = msg; };
+
+    function updateAuthBadge(authed) {
+      const b = $('auth-badge');
+      if (!b) return;
+      if (authed) {
+        b.textContent = '● member';
+        b.style.color = 'var(--green)';
+      } else {
+        b.textContent = '○ anonymous';
+        b.style.color = 'var(--dim)';
+      }
+    }
+
+    const esc = s => String(s ?? '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    function setContent(html) {
+      content.innerHTML = html;
+    }
+
+    // - skeletons -----------------------
+
+    function skeletonRows(n, height1 = 14, height2 = 10) {
+      return Array.from({length: n}).map(() => `
+        <div class="card" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; min-height: 58px;">
+          <div class="skeleton" style="height: ${height1}px; width: 38%;"></div>
+          <div class="skeleton" style="height: ${height2}px; width: 62%;"></div>
+        </div>
+      `).join('');
+    }
+
+    function skeletonDetail() {
+      return `
+        <div class="card" style="padding: 26px 28px; min-height: 420px; display: flex; flex-direction: column; gap: 16px;">
+          <div class="skeleton" style="height: 11px; width: 22%;"></div>
+          <div class="skeleton" style="height: 20px; width: 42%; margin-bottom: 8px;"></div>
+          <div class="skeleton" style="height: 11px; width: 90%;"></div>
+          <div class="skeleton" style="height: 11px; width: 75%;"></div>
+          <div class="skeleton" style="height: 11px; width: 55%;"></div>
+        </div>
+      `;
+    }
+
+    // - empty / error states -----------------
+
+    function emptyState(query) {
+      return `
+        <div class="card fadein" style="
+          min-height: 340px;
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          gap: 10px;
+        ">
+          <span style="font-size: 1.75rem; opacity: 0.3;">🐾</span>
+          <span style="color: var(--dim); font-size: 0.82rem;">
+            no families matched <strong style="color:var(--text2);">"${esc(query)}"</strong>
+          </span>
+          <span style="color: var(--sep); font-size: 0.68rem;">try a shorter term or an alias</span>
+        </div>
+      `;
+    }
+
+    function errorState(msg) {
+      return `
+        <div class="card fadein" style="
+          min-height: 340px;
+          display: flex; align-items: center; justify-content: center;
+          border-color: rgba(255,120,117,0.3);
+        ">
+          <span style="color: var(--red); font-size: 0.8rem; font-family: var(--mono);">[!] ${esc(msg)}</span>
+        </div>
+      `;
+    }
+
+    // - render: search results ----------------
+
+    function renderResults(data) {
+      if (!data.results?.length) {
+        setContent(emptyState(data.query));
+        return;
+      }
+
+      const cards = data.results.map((r, i) => resultCard(r, i)).join('');
+      setContent(`<div style="display:flex;flex-direction:column;gap:8px;">${cards}</div>`);
+      content.querySelectorAll('[data-family]').forEach(btn =>
+        btn.addEventListener('click', () => loadFamily(btn.dataset.family))
+      );
+    }
+
+    // Render FTS snippet: <<term>> markers from the backend -> highlighted spans.
+    function renderSnippet(snip) {
+      if (!snip) return '';
+      const html = esc(snip)
+        .replaceAll('&lt;&lt;', '<mark style="background:rgba(181,123,255,0.25);color:var(--text);border-radius:3px;padding:0 2px;">')
+        .replaceAll('&gt;&gt;', '</mark>');
+      return `<p style="margin-top:8px;font-size:0.76rem;color:var(--text2);line-height:1.6;">${html}</p>`;
+    }
+
+    // Capability (orange) + sector (green) chips - LLM-derived. Display-only inside cards.
+    function tagChips(caps, secs) {
+      const c = (caps || []).map(x => `<span class="pill pill-orange">${esc(x)}</span>`).join('');
+      const s = (secs || []).map(x => `<span class="pill pill-green">⌖ ${esc(x)}</span>`).join('');
+      return (c + s)
+        ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;">${c}${s}</div>`
+        : '';
+    }
+
+    function resultCard(r, i) {
+      const aliases = (r.aliases || []).slice(0, 4);
+      const actors  = (r.attribution || []).slice(0, 3);
+      const common  = (r.common_name || '').trim();
+
+      const aliasHtml = aliases.map(a => `<span class="pill pill-purple">${esc(a)}</span>`).join('');
+      const actorHtml = actors.map(a => `<span class="pill pill-pink">${esc(a)}</span>`).join('');
+      const idTags = (aliasHtml + actorHtml)
+        ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;">${aliasHtml}${actorHtml}</div>`
+        : '';
+
+      return `
+        <button
+          class="result-card fadein"
+          data-family="${esc(r.name)}"
+          style="animation-delay:${i * 22}ms; flex-direction:column; align-items:stretch; padding:16px 20px;"
+        >
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;">
+            <div style="min-width:0;">
+              <span style="font-family:var(--mono);font-size:0.9rem;font-weight:600;color:var(--text);letter-spacing:-0.01em;">${esc(r.name)}</span>
+              ${common ? `<span style="font-size:0.8rem;color:var(--cyan);margin-left:8px;">${esc(common)}</span>` : ''}
+            </div>
+            <span style="font-size:0.68rem;color:var(--purple);opacity:0.7;flex-shrink:0;">view -></span>
+          </div>
+          ${renderSnippet(r.snippet)}
+          ${tagChips(r.capabilities, r.sectors)}
+          ${idTags}
+        </button>
+      `;
+    }
+
+    // - render: family detail -----------------
+
+    function renderDetail(name, data) {
+      const arr = v => Array.isArray(v) ? v.filter(Boolean) : (v ? [v] : []);
+      const str = v => (typeof v === 'string') ? v : JSON.stringify(v);
+
+      const commonName = (typeof data.common_name === 'string') ? data.common_name.trim() : '';
+      const aliases    = arr(data.alt_names);
+      const actors     = arr(data.attribution);
+      const refs       = arr(data.urls);
+      const library    = arr(data.library_entries);
+      const yara       = arr(data.yara);              // [{tlp, file, rule}]
+      const samples    = arr(data.samples);           // [{sha256, version, status}]
+      const samplesLocked = !!data.samples_locked;
+      const caps       = arr(data.capabilities);
+      const sectors    = arr(data.sectors);
+      const notes      = arr(data.notes).map(str);
+      const desc       = (data.description && data.description.trim())
+                          ? data.description.trim()
+                          : notes.join('\n\n');
+      const updated    = data.updated || '';
+
+      const pills = (items, cls) => items.length
+        ? items.map(x => `<span class="pill ${cls}">${esc(str(x))}</span>`).join(' ')
+        : `<span style="color:var(--dim);font-size:0.75rem;">none</span>`;
+
+      const section = (label, body) => `
+        <div style="padding: 18px 24px;">
+          <div class="label" style="margin-bottom: 10px;">${label}</div>
+          ${body}
+        </div>
+        <hr class="divider" />
+      `;
+
+      setContent(`
+        <div class="card fadein" style="overflow: hidden;">
+
+          <!-- header -->
+          <div style="padding: 22px 24px 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+            <div>
+              <div class="label" style="margin-bottom: 5px;">malware family</div>
+              <h2 style="
+                font-family: var(--mono);
+                font-size: 1.2rem;
+                font-weight: 700;
+                color: var(--text);
+                letter-spacing: -0.025em;
+                line-height: 1.2;
+              ">${esc(name)}</h2>
+              ${commonName ? `<div style="margin-top:4px;font-size:0.82rem;color:var(--cyan);font-weight:500;">${esc(commonName)}</div>` : ''}
+              ${updated ? `<div style="margin-top:5px;font-size:0.63rem;color:var(--dim);">updated ${esc(updated)}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
+              <button class="btn-back" id="brief-btn" style="color:var(--purple);border-color:rgba(181,123,255,0.35);" title="local-LLM SOC brief">🧠 brief</button>
+              ${yara.length ? `<button class="btn-back" id="dl-yara-btn" title="download ${yara.length} YARA rule(s) as .yar">⬇ .yar</button>` : ''}
+              ${samples.length ? `<button class="btn-back" id="copy-hash-btn" title="copy ${samples.length} SHA256 hash(es)">⧉ hashes</button>` : ''}
+              <button class="btn-back" id="copy-md-btn" title="copy as Markdown for a ticket">⧉ copy md</button>
+              <button class="btn-back" id="back-btn">← back</button>
+            </div>
+          </div>
+          <hr class="divider" />
+
+          <div id="brief-box"></div>
+
+          ${section('aliases',
+            `<div style="display:flex;flex-wrap:wrap;gap:6px;">${pills(aliases, 'pill-purple')}</div>`
+          )}
+
+          ${section('description',
+            desc
+              ? `<p style="color:var(--text2);font-size:0.84rem;line-height:1.75;">${esc(desc)}</p>`
+              : `<p style="color:var(--dim);font-size:0.78rem;">no description available.</p>`
+          )}
+
+          ${section('threat actors / attribution',
+            actors.length
+              ? `<div style="display:flex;flex-wrap:wrap;gap:6px;">
+                   ${actors.map(a => `<button class="pill pill-pink" data-actor="${esc(str(a))}" style="cursor:pointer;font-family:var(--font);" title="show all families by this actor">${esc(str(a))} -></button>`).join('')}
+                 </div>`
+              : `<span style="color:var(--dim);font-size:0.75rem;">unattributed</span>`
+          )}
+
+          ${(caps.length || sectors.length) ? section('classification · local LLM',
+            `<div style="display:flex;flex-wrap:wrap;gap:6px;">
+               ${caps.map(cp => `<button class="pill pill-orange" data-tag="${esc(cp)}" data-kind="capability" style="cursor:pointer;font-family:var(--font);" title="all ${esc(cp)} families">${esc(cp)} -></button>`).join('')}
+               ${sectors.map(s => `<button class="pill pill-green" data-tag="${esc(s)}" data-kind="sector" style="cursor:pointer;font-family:var(--font);" title="all families targeting ${esc(s)}">⌖ ${esc(s)} -></button>`).join('')}
+             </div>
+             <div style="margin-top:7px;font-size:0.6rem;color:var(--dim);">inferred locally · click to pivot</div>`
+          ) : ''}
+
+          ${yara.length ? section(`yara rules · ${yara.length}`,
+            yara.map((y, yi) => `
+              <details style="margin-bottom:6px;">
+                <summary style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--sep);border-radius:8px;">
+                  <span class="pill pill-${y.tlp === 'tlp_white' ? 'cyan' : (y.tlp === 'tlp_green' ? 'orange' : 'pink')}">${esc((y.tlp || '').replace('tlp_',''))}</span>
+                  <span style="font-family:var(--mono);font-size:0.72rem;color:var(--text2);">${esc(y.file)}</span>
+                </summary>
+                <pre class="mono-block" style="margin-top:6px;max-height:300px;overflow:auto;">${esc(y.rule)}</pre>
+                <div style="margin-top:6px;">
+                  <button class="llm-btn" data-yexp="${yi}">🧠 explain rule</button>
+                  <div class="llm-out" id="yexp-out-${yi}"></div>
+                </div>
+              </details>
+            `).join('')
+          ) : ''}
+
+          ${section('samples',
+            samplesLocked
+              ? `<div style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg);border:1px dashed var(--sep);border-radius:8px;">
+                   <span style="font-size:1.1rem;">🔒</span>
+                   <span style="font-size:0.78rem;color:var(--text2);line-height:1.5;">
+                     sample listing requires <strong style="color:var(--purple);">Malpedia membership</strong>.
+                     add an API token to <code style="font-family:var(--mono);color:var(--cyan);">.env</code> to unlock.
+                   </span>
+                 </div>`
+              : samples.length
+                ? `<div style="display:flex;flex-direction:column;gap:5px;">
+                     ${samples.slice(0, 50).map(s => {
+                        const sha = esc(s.sha256 || s.id || '');
+                        const ver = esc(s.version || '');
+                        const st  = esc(s.status || '');
+                        return `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:var(--bg);border:1px solid var(--sep);border-radius:8px;">
+                          <span style="font-family:var(--mono);font-size:0.68rem;color:var(--text2);word-break:break-all;">${sha}</span>
+                          <span style="display:flex;gap:5px;flex-shrink:0;">
+                            ${st ? `<span class="pill pill-${st === 'unpacked' ? 'green' : 'orange'}">${st}</span>` : ''}
+                            ${ver ? `<span class="pill pill-purple">${ver}</span>` : ''}
+                          </span>
+                        </div>`;
+                     }).join('')}
+                     ${samples.length > 50 ? `<span style="font-size:0.65rem;color:var(--dim);padding:4px 2px;">+ ${samples.length - 50} more</span>` : ''}
+                   </div>`
+                : `<span style="color:var(--dim);font-size:0.75rem;">no samples available</span>`
+          )}
+
+          ${library.length ? section('library entries',
+            `<div style="display:flex;flex-wrap:wrap;gap:6px;">${pills(library, 'pill-cyan')}</div>`
+          ) : ''}
+
+          ${refs.length ? section('references',
+            `<ul style="list-style:none;display:flex;flex-direction:column;gap:5px;">
+              ${refs.map(r => `<li><a href="${esc(r)}" target="_blank" rel="noopener" class="ref-link">${esc(r)}</a></li>`).join('')}
+            </ul>`
+          ) : ''}
+
+          ${section('ask this family · local LLM',
+            `<div style="display:flex;gap:8px;">
+               <input id="ask-input" class="search-input" style="height:40px;font-size:0.82rem;" placeholder="e.g. how does it persist? what does it steal?" spellcheck="false" />
+               <button class="llm-btn" id="ask-btn" style="height:40px;padding:0 16px;">ask →</button>
+             </div>
+             <div style="margin-top:7px;font-size:0.6rem;color:var(--dim);">answered locally from this family's data only · verify</div>
+             <div id="ask-answers" style="margin-top:12px;"></div>`
+          )}
+
+          <!-- raw json -->
+          <div style="padding: 16px 24px 20px;">
+            <details>
+              <summary style="font-size:0.68rem;color:var(--dim);transition:color .15s;"
+                onmouseover="this.style.color='var(--text2)'"
+                onmouseout="this.style.color='var(--dim)'">
+                ▸ raw json
+              </summary>
+              <pre class="mono-block" style="margin-top:10px;max-height:260px;overflow:auto;">${esc(JSON.stringify(data, null, 2))}</pre>
+            </details>
+          </div>
+
+        </div>
+      `);
+
+      $('back-btn').addEventListener('click', () => {
+        if (_lastResults) renderResults(_lastResults);
+        else setContent(emptyPlaceholder());
+        if (_lastResults) {
+          setStatus(
+            `${_lastResults.count} result${_lastResults.count !== 1 ? 's' : ''} for "${_lastResults.query}"`
+          );
+        }
+      });
+
+      // actor pivot
+      content.querySelectorAll('[data-actor]').forEach(btn =>
+        btn.addEventListener('click', () => loadActor(btn.dataset.actor))
+      );
+
+      // tag pivot (capability / sector)
+      content.querySelectorAll('[data-tag]').forEach(btn =>
+        btn.addEventListener('click', () => loadByTag(btn.dataset.tag, btn.dataset.kind))
+      );
+
+      // copy-as-Markdown brief
+      $('copy-md-btn').addEventListener('click', (e) =>
+        flashCopy(e.target, familyMarkdown(name, data), '⧉ copy md')
+      );
+
+      // detection export - download .yar (client-side, from loaded rules)
+      const dlYara = $('dl-yara-btn');
+      if (dlYara) dlYara.addEventListener('click', (e) => {
+        downloadFile(`${name}.yar`, buildYara(name, yara), 'text/plain');
+        e.target.textContent = '✓ saved';
+        setTimeout(() => { e.target.textContent = '⬇ .yar'; }, 1400);
+      });
+
+      // detection export - copy all sample SHA256 hashes
+      const cpHash = $('copy-hash-btn');
+      if (cpHash) cpHash.addEventListener('click', (e) => {
+        const hashes = samples.map(s => s.sha256 || s.id || '').filter(Boolean).join('\n');
+        flashCopy(e.target, hashes, '⧉ hashes');
+      });
+
+      // local-LLM: SOC brief
+      $('brief-btn').addEventListener('click', (e) => {
+        e.target.disabled = true;
+        loadBrief(name).finally(() => { e.target.disabled = false; });
+      });
+
+      // local-LLM: explain a YARA rule
+      content.querySelectorAll('[data-yexp]').forEach(btn =>
+        btn.addEventListener('click', () =>
+          explainYara(yara[+btn.dataset.yexp].rule, $(`yexp-out-${btn.dataset.yexp}`), btn)
+        )
+      );
+
+      // local-LLM: ask this family
+      const askBtn = $('ask-btn'), askInput = $('ask-input'), askAnswers = $('ask-answers');
+      if (askBtn) {
+        askBtn.addEventListener('click', () => askFamily(name, askInput, askAnswers, askBtn));
+        askInput.addEventListener('keydown', e => {
+          if (e.key === 'Enter') { e.preventDefault(); askFamily(name, askInput, askAnswers, askBtn); }
+        });
+      }
+    }
+
+    // - local-LLM helpers ---------------------
+
+    function llmThinking(label) {
+      return `<span class="spinner"></span> <span style="color:var(--dim);font-size:0.72rem;">${esc(label || 'thinking locally…')}</span>`;
+    }
+
+    async function llmError(res) {
+      const e = await res.json().catch(() => ({}));
+      return e.detail || `${res.status} ${res.statusText}`;
+    }
+
+    async function loadBrief(name) {
+      const box = $('brief-box');
+      box.innerHTML = `<div style="padding:14px 24px 0;"><div class="llm-box">${llmThinking('drafting SOC brief locally…')}</div></div>`;
+      try {
+        const res = await fetch(`/api/brief/${encodeURIComponent(name)}`);
+        if (!res.ok) throw new Error(await llmError(res));
+        const d = await res.json();
+        box.innerHTML = `<div style="padding:14px 24px 0;"><div class="llm-box">
+          <div class="label" style="margin-bottom:7px;color:var(--purple);">🧠 ai analyst brief · ${esc(d.model)}${d.cached ? ' · cached' : ''}</div>
+          <div class="llm-out">${esc(d.brief)}</div>
+          <div style="margin-top:8px;font-size:0.58rem;color:var(--dim);">AI-generated locally · verify before acting</div>
+        </div></div>`;
+      } catch (err) {
+        box.innerHTML = `<div style="padding:14px 24px 0;"><div class="llm-box" style="border-color:rgba(255,120,117,0.3);"><span style="color:var(--red);font-size:0.76rem;">[!] ${esc(err.message)}</span></div></div>`;
+      }
+    }
+
+    async function explainYara(rule, outEl, btn) {
+      btn.disabled = true;
+      outEl.innerHTML = llmThinking('reading rule locally…');
+      try {
+        const res = await fetch('/api/explain-yara', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rule }),
+        });
+        if (!res.ok) throw new Error(await llmError(res));
+        const d = await res.json();
+        outEl.textContent = d.explanation;
+      } catch (err) {
+        outEl.innerHTML = `<span style="color:var(--red);font-size:0.74rem;">[!] ${esc(err.message)}</span>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function askFamily(name, input, answersEl, btn) {
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      btn.disabled = true;
+      const block = document.createElement('div');
+      block.style.cssText = 'margin-bottom:12px;';
+      block.innerHTML = `<div style="font-size:0.8rem;color:var(--text);font-weight:600;margin-bottom:3px;">${esc(q)}</div><div class="llm-out">${llmThinking('answering from family data…')}</div>`;
+      answersEl.prepend(block);
+      try {
+        const res = await fetch('/api/ask', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, question: q }),
+        });
+        if (!res.ok) throw new Error(await llmError(res));
+        const d = await res.json();
+        block.querySelector('.llm-out').textContent = d.answer;
+      } catch (err) {
+        block.querySelector('.llm-out').innerHTML = `<span style="color:var(--red);font-size:0.74rem;">[!] ${esc(err.message)}</span>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // - export helpers ------------------------
+
+    async function flashCopy(el, text, original) {
+      try {
+        await navigator.clipboard.writeText(text);
+        el.textContent = '✓ copied';
+      } catch {
+        el.textContent = '✗ blocked';
+      }
+      setTimeout(() => { el.textContent = original; }, 1400);
+    }
+
+    function downloadFile(filename, text, mime) {
+      const blob = new Blob([text], { type: mime || 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function buildYara(name, yara) {
+      const head =
+        `// whiskers export - ${name}\n` +
+        `// source: Malpedia (malpedia.caad.fkie.fraunhofer.de)\n` +
+        `// ${yara.length} rule(s)\n\n`;
+      return head + yara.map(y => `// ${y.tlp} · ${y.file}\n${y.rule}`).join('\n\n');
+    }
+
+    // Build a clean Markdown brief for tickets / incident notes.
+    function familyMarkdown(name, data) {
+      const arr = v => Array.isArray(v) ? v.filter(Boolean) : (v ? [v] : []);
+      const common  = (data.common_name || '').trim();
+      const aliases = arr(data.alt_names);
+      const actors  = arr(data.attribution);
+      const refs    = arr(data.urls);
+      const desc    = (data.description || '').trim();
+      const L = [`## ${name}${common ? ` - ${common}` : ''}`];
+      if (actors.length)  L.push(`**Actor:** ${actors.join(', ')}`);
+      if (aliases.length) L.push(`**Aliases:** ${aliases.join(', ')}`);
+      if (data.updated)   L.push(`**Updated:** ${data.updated}`);
+      if (desc)           L.push('', desc);
+      if (refs.length)    L.push('', '**References:**', ...refs.map(r => `- ${r}`));
+      L.push('', `_via whiskers · malpedia.caad.fkie.fraunhofer.de_`);
+      return L.join('\n');
+    }
+
+    // - render: actor pivot -------------------
+
+    async function loadActor(actorName) {
+      _lastResults = null;
+      setContent(skeletonRows(5));
+      setStatus(`pivoting on ${actorName}…`);
+      try {
+        const res = await fetch(`/api/actor/${encodeURIComponent(actorName)}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        setStatus(`${data.count} famil${data.count === 1 ? 'y' : 'ies'} attributed to ${actorName}`);
+        renderActor(data);
+      } catch (err) {
+        setContent(errorState(err.message));
+        setStatus('');
+      }
+    }
+
+    function renderActor(data) {
+      const head = `
+        <div class="card fadein" style="padding:20px 24px;display:flex;flex-direction:column;gap:6px;">
+          <div class="label">threat actor · arsenal</div>
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+            <span style="font-size:1.3rem;font-weight:700;color:var(--pink);">${esc(data.actor)}</span>
+            <span style="font-size:0.8rem;color:var(--text2);">${data.count} famil${data.count === 1 ? 'y' : 'ies'} attributed</span>
+          </div>
+        </div>`;
+      if (!data.families?.length) { setContent(head); return; }
+      const cards = data.families.map((f, i) => reportCard(f, i)).join('');
+      setContent(head + `<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">${cards}</div>`);
+      content.querySelectorAll('[data-family]').forEach(btn =>
+        btn.addEventListener('click', () => loadFamily(btn.dataset.family))
+      );
+    }
+
+    // - render: tag pivot (capability / sector) --
+
+    async function loadByTag(tag, kind) {
+      _lastResults = null;
+      setContent(skeletonRows(5));
+      setStatus(`pivoting on ${tag}…`);
+      try {
+        const res = await fetch(`/api/by-tag?tag=${encodeURIComponent(tag)}&kind=${encodeURIComponent(kind || 'capability')}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        setStatus(`${data.count} famil${data.count === 1 ? 'y' : 'ies'} tagged "${tag}"`);
+        renderByTag(data);
+      } catch (err) {
+        setContent(errorState(err.message));
+        setStatus('');
+      }
+    }
+
+    function renderByTag(data) {
+      const isSector = data.kind === 'sector';
+      const head = `
+        <div class="card fadein" style="padding:20px 24px;display:flex;flex-direction:column;gap:6px;">
+          <div class="label">${isSector ? 'target sector' : 'capability'} · pivot</div>
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+            <span style="font-size:1.3rem;font-weight:700;color:var(--${isSector ? 'green' : 'orange'});">${isSector ? '⌖ ' : ''}${esc(data.tag)}</span>
+            <span style="font-size:0.8rem;color:var(--text2);">${data.count} famil${data.count === 1 ? 'y' : 'ies'}</span>
+          </div>
+        </div>`;
+      if (!data.families?.length) { setContent(head); return; }
+      const cards = data.families.map((f, i) => reportCard(f, i)).join('');
+      setContent(head + `<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">${cards}</div>`);
+      content.querySelectorAll('[data-family]').forEach(btn =>
+        btn.addEventListener('click', () => loadFamily(btn.dataset.family))
+      );
+    }
+
+    function emptyPlaceholder() {
+      return `
+        <div class="card" style="
+          min-height: 340px; display: flex; flex-direction: column;
+          align-items: center; justify-content: center; gap: 10px;
+        ">
+          <span style="font-size: 2rem; opacity: 0.25;">🐾</span>
+          <span style="color: var(--dim); font-size: 0.82rem;">enter a family name above to begin</span>
+          <span style="color: var(--sep); font-size: 0.65rem; letter-spacing: 0.04em;">powered by malpedia</span>
+        </div>
+      `;
+    }
+
+    // - API --------------------------
+
+    let _lastResults = null;
+
+    async function doSearch(query) {
+      _lastResults = null;
+      setContent(skeletonRows(5));
+      setStatus('hunting…');
+      searchBtn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        _lastResults = data;
+        setStatus(data.count
+          ? `${data.count} result${data.count !== 1 ? 's' : ''} for "${query}"`
+          : `no results for "${query}"`
+        );
+        renderResults(data);
+      } catch (err) {
+        setContent(errorState(err.message));
+        setStatus('');
+      } finally {
+        searchBtn.disabled = false;
+      }
+    }
+
+    async function loadFamily(name) {
+      setContent(skeletonDetail());
+      setStatus(`loading ${name}…`);
+
+      try {
+        const res = await fetch(`/api/family/${encodeURIComponent(name)}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        setStatus('');
+        updateAuthBadge(data.authenticated);
+        renderDetail(name, data);
+      } catch (err) {
+        setContent(errorState(err.message));
+        setStatus('');
+      }
+    }
+
+    // - render: activity report ---------------
+
+    function reportCard(f, i) {
+      const aliases = (f.aliases || []).slice(0, 5).map(a => `<span class="pill pill-purple">${esc(a)}</span>`).join('');
+      const actors  = (f.attribution || []).slice(0, 4).map(a => `<span class="pill pill-pink">${esc(a)}</span>`).join('');
+      const desc    = (f.description || '').trim();
+      const common  = (f.common_name || '').trim();
+      return `
+        <button class="result-card fadein" data-family="${esc(f.name)}"
+          style="animation-delay:${i * 18}ms; flex-direction:column; align-items:stretch; padding:18px 22px;">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;">
+            <div style="min-width:0;">
+              <span style="font-family:var(--mono);font-size:0.92rem;font-weight:600;color:var(--text);">${esc(f.name)}</span>
+              ${common ? `<span style="font-size:0.8rem;color:var(--cyan);margin-left:8px;">${esc(common)}</span>` : ''}
+            </div>
+            <span style="font-size:0.64rem;color:var(--dim);flex-shrink:0;">${esc(f.updated || '')}</span>
+          </div>
+          ${desc ? `<p style="margin-top:9px;font-size:0.78rem;color:var(--text2);line-height:1.65;">${esc(desc.slice(0,260))}${desc.length>260?'…':''}</p>` : ''}
+          ${tagChips(f.capabilities, f.sectors)}
+          ${(aliases + actors) ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;">${aliases}${actors}</div>` : ''}
+        </button>`;
+    }
+
+    function renderReport(data) {
+      const when = (data.generated || '').replace('T', ' ').replace(/\+.*$/, '') + ' UTC';
+      const head = `
+        <div class="card fadein" style="padding:20px 24px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div class="label">activity report · last ${esc(data.window)}</div>
+            <span style="font-size:0.62rem;color:var(--dim);">generated ${esc(when)}</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;">
+            <span style="font-size:1.7rem;font-weight:700;color:var(--text);">${data.count}</span>
+            <span style="font-size:0.82rem;color:var(--text2);">famil${data.count === 1 ? 'y' : 'ies'} updated</span>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text2);line-height:1.65;">${esc(data.summary)}</p>
+        </div>`;
+
+      if (!data.families?.length) { setContent(head); return; }
+      const cards = data.families.map((f, i) => reportCard(f, i)).join('');
+      setContent(head + `<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">${cards}</div>`);
+      content.querySelectorAll('[data-family]').forEach(btn =>
+        btn.addEventListener('click', () => loadFamily(btn.dataset.family))
+      );
+    }
+
+    async function loadReport(window) {
+      _lastResults = null;
+      setContent(skeletonRows(5));
+      setStatus(`pulling last ${window}…`);
+      try {
+        const res = await fetch(`/api/report?window=${encodeURIComponent(window)}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        setStatus(`${data.count} updated in the last ${window}`);
+        renderReport(data);
+      } catch (err) {
+        setContent(errorState(err.message));
+        setStatus('');
+      }
+    }
+
+    // - events ------------------------
+
+    $('search-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const q = searchInput.value.trim();
+      if (q) doSearch(q);
+    });
+
+    document.querySelectorAll('[data-window]').forEach(btn =>
+      btn.addEventListener('click', () => loadReport(btn.dataset.window))
+    );
+
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    // landing: browse-by-capability chips (populated from local-LLM tags)
+    (async () => {
+      try {
+        const res = await fetch('/api/tags');
+        if (!res.ok) return;
+        const t = await res.json();
+        const caps = Object.entries(t.capabilities || {});
+        if (!caps.length) return;
+        const row = $('browse-tags-row');
+        row.innerHTML = caps.slice(0, 12)
+          .map(([tag, n]) => `<button class="pill pill-orange" data-tag="${esc(tag)}" data-kind="capability" style="cursor:pointer;font-family:var(--font);">${esc(tag)} · ${n}</button>`)
+          .join('');
+        row.querySelectorAll('[data-tag]').forEach(btn =>
+          btn.addEventListener('click', () => loadByTag(btn.dataset.tag, 'capability'))
+        );
+        $('browse-tags').style.display = 'flex';
+        const note = document.querySelector('#empty-placeholder span:nth-of-type(3)');
+        if (note) note.textContent = `${t.tagged}/${t.total} families tagged by local LLM`;
+      } catch { /* tags optional */ }
+    })();
+
+  })();
+  </script>
+</body>
+</html>

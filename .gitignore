@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+whiskers.db
+whiskers.db-wal
+whiskers.db-shm
+CLAUDE.md

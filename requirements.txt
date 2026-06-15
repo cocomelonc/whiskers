@@ -1,0 +1,8 @@
+# whiskers - Malpedia micro TI SOC context panel
+# Storage: SQLite + FTS5 (Python stdlib, no extra dependency, no daemon).
+
+fastapi>=0.115
+uvicorn[standard]>=0.30
+malpediaclient>=0.3.2
+python-dotenv>=1.0
+APScheduler>=3.10
