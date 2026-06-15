@@ -11,6 +11,8 @@ with a **local LLM running on your own CPU/GPU**. No cloud, no build step, no No
 
 Tactical, fast, offline-friendly. Subtle cat vibes in the logs.     
 
+[whiskers.db](https://t.me/maldevcc/210) - full corpus: tagged via GPU (`v1.0`), enjoy!     
+
 ---
 
 ## Philosophy
