@@ -71,6 +71,8 @@ With a token, the family card gains **sample listings** and the full set of `TLP
 rules. Without one, those sections show a friendly "membership required" note and everything else
 keeps working. The header badge reflects your state - `● member` or `○ anonymous`.    
 
+![img](./img/membership.png)     
+
 ---
 
 ## Features
@@ -83,6 +85,8 @@ citation domain - matched terms are highlighted in the result snippet.
 descriptions: "android banking trojan stealing credentials" surfaces the right families even with
 zero keyword overlap. Vectors are precomputed once (GPU); a query embeds in ~50 ms on CPU. Each
 family card also shows a precomputed **similar families** list - zero query-time cost.    
+
+![img](./img/similarity.png)     
 
 **Family card** - canonical name, aliases, description, attribution, references, the full YARA
 rule text, and known samples. Threat-actor and capability tags are clickable.    
@@ -124,9 +128,17 @@ OLLAMA_MODEL=qwen3:1.7b
 
 These appear on the family card and run only when you click - a few seconds on CPU.    
 
-- **🧠 brief** - a tight SOC brief: what it is, primary risk, and two or three detection ideas. Cached after first generation.    
-- **🧠 explain rule** - plain-English explanation of a YARA rule and its false-positive risk; turns opaque auto-generated rules into something readable.    
-- **💬 ask this family** - ask a question answered *only* from that family's data; it refuses ("Not stated in Malpedia data") rather than guess.   
+**🧠 brief** - a tight SOC brief: what it is, primary risk, and two or three detection ideas. Cached after first generation.     
+
+![img](./img/brief.png)     
+
+**🧠 explain rule** - plain-English explanation of a YARA rule and its false-positive risk; turns opaque auto-generated rules into something readable.    
+
+![img](./img/explain-rule.png)     
+
+**💬 ask this family** - ask a question answered *only* from that family's data; it refuses ("Not stated in Malpedia data") rather than guess.   
+
+![img](./img/ask.png)     
 
 If Ollama isn't running, these report it inline and the rest of whiskers is unaffected.    
 
