@@ -1,3 +1,6 @@
+# whiskers - low-noise threat intel (Malpedia TI/SOC context panel)
+# copyright (c) 2026 cocomelonc
+# author: cocomelonc
 import asyncio
 import functools
 import json

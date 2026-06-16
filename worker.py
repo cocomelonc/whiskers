@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# copyright (c) 2026 cocomelonc
+# author: cocomelonc
 """whiskers - local-LLM enrichment worker.
 
 Tags every Malpedia family with capabilities + target sectors using a small
