@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="whiskers-kitten.png" alt="Whiskers threat intelligence kitten" width="140" />
+</p>
+
 # whiskers  =^..^=
 
 > low-noise threat intel - a minimalist micro TI / SOC context panel powered by local AI + Malpedia API.
