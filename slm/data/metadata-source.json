@@ -1,0 +1,9 @@
+{
+  "url": "https://malpedia.caad.fkie.fraunhofer.de/api/get/families",
+  "retrieved_utc": "2026-11-17",
+  "bytes": 4284649,
+  "sha256": "eb735ce0c97faeddf29921528d6bdea5266957a82114ac9289af89159bd8fd94",
+  "access": "anonymous; no member token; public metadata only",
+  "terms": "https://malpedia.caad.fkie.fraunhofer.de/usage/tos",
+  "version_endpoint_is_atomic_with_snapshot": false
+}

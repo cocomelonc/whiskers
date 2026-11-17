@@ -1,0 +1,841 @@
+{
+  "project": "whiskers-mini-ti",
+  "protocol": "whiskers-evidence-v1",
+  "seed": 20261117,
+  "source_url": "https://malpedia.caad.fkie.fraunhofer.de/api/get/families",
+  "source_snapshot_sha256": "eb735ce0c97faeddf29921528d6bdea5266957a82114ac9289af89159bd8fd94",
+  "source_families": 3843,
+  "counts": {
+    "train": 1906,
+    "validation": 255,
+    "test": 236,
+    "demo": 59
+  },
+  "tasks": {
+    "brief": 246,
+    "identity": 246,
+    "aliases": 246,
+    "attribution": 246,
+    "record_updated": 246,
+    "unknown_current": 246,
+    "unknown_sample": 246,
+    "unknown_injection": 246,
+    "behavior_execution": 65,
+    "behavior_collection": 55,
+    "behavior_targets": 71,
+    "behavior_resolution": 8,
+    "behavior_persistence": 19,
+    "rule_facts": 90,
+    "rule_author": 90,
+    "rule_unknown": 90
+  },
+  "abstentions": {
+    "train": 921,
+    "validation": 114,
+    "test": 113,
+    "demo": 21
+  },
+  "groups": {
+    "train": [
+      "apk.888_rat",
+      "apk.crocodilus",
+      "apk.flytrap",
+      "apk.medusa",
+      "apk.retefe",
+      "apk.sidewinder",
+      "apk.smsagent",
+      "apk.unidentified_002",
+      "apk.zanubis",
+      "elf.1337_gtwk_rootkit",
+      "elf.angryrebel",
+      "elf.avrecon",
+      "elf.b1txor20",
+      "elf.blackcat",
+      "elf.bqtlock",
+      "elf.chaos",
+      "elf.ddg",
+      "elf.dofloo",
+      "elf.drifter",
+      "elf.insidiousgh0st",
+      "elf.interlock",
+      "elf.iocontrol",
+      "elf.jackskid",
+      "elf.nimbo_c2",
+      "elf.payload",
+      "elf.redtail",
+      "elf.seaspy",
+      "elf.shadowv2",
+      "elf.shortleash",
+      "elf.simpletea",
+      "elf.singularity",
+      "elf.snappy_tcp",
+      "elf.spawnsnare",
+      "elf.sustes",
+      "elf.sysrvhello",
+      "elf.teamtnt",
+      "jar.adwind",
+      "jar.dynamicrat",
+      "jar.icerat",
+      "jar.pronsis_loader",
+      "jar.ratty",
+      "js.gootloader",
+      "js.more_eggs",
+      "js.offode",
+      "js.peacenotwar",
+      "js.qnodeservice",
+      "js.runforestrun",
+      "js.sqlrat",
+      "js.starfish",
+      "osx.cointhief",
+      "osx.fullhouse",
+      "osx.hiddenlotus",
+      "osx.keysteal",
+      "osx.komplex",
+      "osx.oceanlotus",
+      "php.anishell",
+      "php.parrot_tds_shell",
+      "ps1.choco_shell",
+      "ps1.ftcode",
+      "ps1.sload",
+      "py.pyramid",
+      "py.responder",
+      "win.2cloader",
+      "win.8t_dropper",
+      "win.abcdoor",
+      "win.adaptix_c2",
+      "win.agent_btz",
+      "win.amatera",
+      "win.anchormtea",
+      "win.apollo",
+      "win.aridhelper",
+      "win.astasia",
+      "win.atmspitter",
+      "win.attor",
+      "win.avcrypt",
+      "win.aveo",
+      "win.avzhan",
+      "win.balkan_rat",
+      "win.bat_loader",
+      "win.bid_ransomware",
+      "win.biscuit",
+      "win.blackcoffee",
+      "win.blustealer",
+      "win.brambul",
+      "win.breakthrough_loader",
+      "win.broomstick",
+      "win.bundlebot",
+      "win.caddywiper",
+      "win.cadelspy",
+      "win.carbanak",
+      "win.cargobay",
+      "win.chaes",
+      "win.chairsmack",
+      "win.cheesetray",
+      "win.chrysalis",
+      "win.clambling",
+      "win.cloud_scout",
+      "win.comebacker",
+      "win.comlook",
+      "win.cryptbot",
+      "win.darkcomet",
+      "win.darkmoon",
+      "win.darkshell",
+      "win.deeppost",
+      "win.dnespy",
+      "win.donot",
+      "win.dostealer",
+      "win.doubleback",
+      "win.driftpin",
+      "win.dtrack",
+      "win.duuzer",
+      "win.earthworm",
+      "win.easynight",
+      "win.edr_silencer",
+      "win.elirks",
+      "win.elmachete_dropper_2022",
+      "win.emdivi",
+      "win.exmatter",
+      "win.expiro",
+      "win.fast16",
+      "win.fastloader",
+      "win.fengine",
+      "win.finteam",
+      "win.flesh_stealer",
+      "win.galaxyloader",
+      "win.gaudox",
+      "win.gdrive",
+      "win.geminiduke",
+      "win.ghambar",
+      "win.gogra",
+      "win.gold_dragon",
+      "win.goldenspy",
+      "win.gootkit",
+      "win.grapeloader",
+      "win.grayrabbit",
+      "win.grimplant",
+      "win.gspy",
+      "win.hi_zor_rat",
+      "win.htbot",
+      "win.http_troy",
+      "win.httpbrowser",
+      "win.hui_loader",
+      "win.hunters_international",
+      "win.icexloader",
+      "win.imprudentcook",
+      "win.inc",
+      "win.infinitylock",
+      "win.innfirat",
+      "win.ironnetinjector",
+      "win.ismagent",
+      "win.jripbot",
+      "win.kami",
+      "win.kardonloader",
+      "win.khonsari",
+      "win.khrat",
+      "win.killdisk",
+      "win.ksl0t",
+      "win.ldr4",
+      "win.leslieloader",
+      "win.lorem_ipsum",
+      "win.lunarmail",
+      "win.m00nd3v",
+      "win.makop",
+      "win.maoloa",
+      "win.maxtrilha",
+      "win.megacortex",
+      "win.mewsei",
+      "win.mirrorkey",
+      "win.mispadu",
+      "win.moker",
+      "win.moonwalk",
+      "win.mydoom",
+      "win.mykings_spreader",
+      "win.nefilim",
+      "win.nerbian_rat",
+      "win.net_star",
+      "win.newbounce",
+      "win.nglite",
+      "win.nikihttp",
+      "win.nim_blackout",
+      "win.nimgrabber",
+      "win.nominatus_toxic_battery",
+      "win.ntospy",
+      "win.okrum",
+      "win.open_carrot",
+      "win.panda_stealer",
+      "win.phantomgraph",
+      "win.phantompull",
+      "win.pipemon",
+      "win.png_load",
+      "win.pseudo_manuscrypt",
+      "win.purplewave",
+      "win.pwndlocker",
+      "win.pykspa",
+      "win.quan_pin_loader",
+      "win.racket",
+      "win.raindrop",
+      "win.ramnit",
+      "win.rctrl",
+      "win.recordbreaker",
+      "win.red_gambler",
+      "win.redenergy_stealer",
+      "win.redshawl",
+      "win.regphantom",
+      "win.remus",
+      "win.rifdoor",
+      "win.roseam",
+      "win.sagerunex",
+      "win.salatstealer",
+      "win.scranos",
+      "win.shadowpad",
+      "win.sharpyshell",
+      "win.skipper",
+      "win.skuld",
+      "win.sloppyrat",
+      "win.smominru",
+      "win.snojan",
+      "win.soundbill",
+      "win.spectre",
+      "win.spygrace",
+      "win.ssload",
+      "win.supernova",
+      "win.sync_scheduler",
+      "win.tabmsgsql",
+      "win.taleret",
+      "win.taurus_stealer",
+      "win.tdiscoverer",
+      "win.telb",
+      "win.terndoor",
+      "win.terra_recon",
+      "win.titan_stealer",
+      "win.treasurehunter",
+      "win.troldesh",
+      "win.unidentified_045",
+      "win.unidentified_075",
+      "win.unidentified_116",
+      "win.vapor_rage",
+      "win.varenyky",
+      "win.vobfus",
+      "win.vyveva",
+      "win.warmcookie",
+      "win.waterbear",
+      "win.webc2_head",
+      "win.webmonitor",
+      "win.wmighost",
+      "win.xcaon",
+      "win.yayih",
+      "win.zeppelin",
+      "win.zerocleare",
+      "win.zeus_sphinx",
+      "win.zitmo"
+    ],
+    "validation": [
+      "apk.alien",
+      "elf.doublefantasy",
+      "elf.hellokitty",
+      "elf.notrobin",
+      "elf.privet_sanya",
+      "elf.ransomexx",
+      "osx.cloudsyncd",
+      "osx.interception",
+      "win.animate_clipper",
+      "win.burnbook",
+      "win.buterat",
+      "win.dadjoke",
+      "win.dracu_loader",
+      "win.evilplayout",
+      "win.feodo",
+      "win.globeimposter",
+      "win.graphdrop",
+      "win.hiddentear",
+      "win.ironhalo",
+      "win.isfb",
+      "win.juicy_potato",
+      "win.klackring",
+      "win.koiloader",
+      "win.loochiper",
+      "win.misha",
+      "win.mole",
+      "win.nymaim2",
+      "win.pushdo",
+      "win.redosdru",
+      "win.rokrat",
+      "win.samsam",
+      "win.silent_run_loader",
+      "win.snappy_client",
+      "win.spyeye",
+      "win.swiftslicer",
+      "win.unidentified_041",
+      "win.unidentified_114",
+      "win.velso"
+    ],
+    "test": [
+      "apk.axbanker",
+      "apk.cpuminer",
+      "apk.moqhao",
+      "apk.unidentified_004",
+      "elf.botking",
+      "elf.gotitan",
+      "elf.satori",
+      "elf.voidlink",
+      "ps1.phantom_relay",
+      "vbs.gammaload",
+      "win.bdark_rat",
+      "win.birdcall",
+      "win.crosswalk",
+      "win.disk_knight",
+      "win.doublepulsar",
+      "win.epsilon_stealer",
+      "win.flawedgrace",
+      "win.gtpdoor",
+      "win.hexalocker",
+      "win.ice_ix",
+      "win.metamorfo",
+      "win.midas",
+      "win.moonbounce",
+      "win.nachocheese",
+      "win.nikitear",
+      "win.pebbledash",
+      "win.petya",
+      "win.poweliks",
+      "win.servhelper",
+      "win.unidentified_110",
+      "win.unidentified_112",
+      "win.victorygate"
+    ],
+    "demo": [
+      "apk.flubot",
+      "elf.mirai",
+      "win.cobalt_strike",
+      "win.emotet",
+      "win.plugx",
+      "win.xworm"
+    ]
+  },
+  "sha256": {
+    "train": "c622298c6a5c8bc9ac5af4a5add1b6038c09e767425e7404e526b4d7619a8a1b",
+    "validation": "bd77f2c135fe4caa838b67c1072a40884b4ab127778ae07d9d1f78235db74cf1",
+    "test": "12b258d1054472e6784c48bdd625dc641909c5b5fbfadf9806c9fb5c62e04d34",
+    "demo": "3cf731a32724ee82e2a0c74225b55951151716013113cda75e4776b48d45e5c8"
+  },
+  "source_rules": [
+    {
+      "file": "win.cadelspy_auto.yar",
+      "sha256": "c3260d973d50eb569a74f51e42e8c4296c2f9596226bb47f378633ab82e531a2",
+      "family": "win.cadelspy"
+    },
+    {
+      "file": "win.biscuit_auto.yar",
+      "sha256": "edbcd38c2c3ccedd42fe99f2539726ca89d3320de7834c860deee336f9c3e300",
+      "family": "win.biscuit"
+    },
+    {
+      "file": "win.red_gambler_auto.yar",
+      "sha256": "1c73aa6e9dfa5ded6fcc21623f2a0d4e3de407f397f8287d4debac2ffa968a90",
+      "family": "win.red_gambler"
+    },
+    {
+      "file": "win.chairsmack_auto.yar",
+      "sha256": "75e874358133b616ed583442f26c56dbd1afeb8b5636a92196accae5f923ee61",
+      "family": "win.chairsmack"
+    },
+    {
+      "file": "win.ismagent_auto.yar",
+      "sha256": "e89261451afd98a69c81d5a37e718512156b8e12bab2116a5a1bb77195704eb8",
+      "family": "win.ismagent"
+    },
+    {
+      "file": "win.koiloader_auto.yar",
+      "sha256": "c3d13dbbadac137e62510ef61806fb064d2b642777a496af9898d4dfec15bcf6",
+      "family": "win.koiloader"
+    },
+    {
+      "file": "win.ondritols_auto.yar",
+      "sha256": "48ad4d9d89eb38cc4204e24f35c7602c56185792f8b048403e343512c2cdf772",
+      "family": "win.ondritols"
+    },
+    {
+      "file": "win.crosswalk_auto.yar",
+      "sha256": "6c9dc1130a66ca6c5d5174758a39853880239901b61bbc47718b06c3802c9199",
+      "family": "win.crosswalk"
+    },
+    {
+      "file": "win.earthworm_auto.yar",
+      "sha256": "a692602594684d71f5ae0189ebeae8fcebb3fbd83815e12a5e7c8dac89f7366d",
+      "family": "win.earthworm"
+    },
+    {
+      "file": "win.moonwalk_auto.yar",
+      "sha256": "c2e87f1f54577dc1cdb414642ebf1eefc427626c36d5e37ac1f944edc25d7c53",
+      "family": "win.moonwalk"
+    },
+    {
+      "file": "win.deeppost_auto.yar",
+      "sha256": "be64395c4c02da99e9cea1643f4597f72e0742d42e8a528cebe75e238b457346",
+      "family": "win.deeppost"
+    },
+    {
+      "file": "win.hui_loader_auto.yar",
+      "sha256": "bab3f1b7a48d9e9488c7b30f4e8fc5a6e1282c9ea87aaccc85d1cc88ce0cac51",
+      "family": "win.hui_loader"
+    },
+    {
+      "file": "win.doublepulsar_auto.yar",
+      "sha256": "25cac43ebc98d5279191087e3af8ddc7cfc22b2839cc38b55b68f127b096e9fe",
+      "family": "win.doublepulsar"
+    },
+    {
+      "file": "win.htbot_auto.yar",
+      "sha256": "3ffc72230b064a560f9b9586df10fa5cfbf3f139455ba581c3093e766118ee06",
+      "family": "win.htbot"
+    },
+    {
+      "file": "win.emdivi_auto.yar",
+      "sha256": "e86692dd0c7b216c4982a4c754983074327dac59c0b111251613ad65b55e4081",
+      "family": "win.emdivi"
+    },
+    {
+      "file": "win.rctrl_auto.yar",
+      "sha256": "5e005b94121e55f7cdf0fa8b7b4e79fab0457123c843a5eb29041cea3f620d93",
+      "family": "win.rctrl"
+    },
+    {
+      "file": "win.misha_auto.yar",
+      "sha256": "f2b95d34a4264f0ab781f0391916427a09c7914791cdd828346c212891030447",
+      "family": "win.misha"
+    },
+    {
+      "file": "win.burnbook_auto.yar",
+      "sha256": "330bb5d781aea455095160b40b109310ad69a61209a3985dfd1daf9a23887c0c",
+      "family": "win.burnbook"
+    },
+    {
+      "file": "win.vyveva_auto.yar",
+      "sha256": "e2f3ae613c9160a4b0f3bffd5667fcb67864297490f1a46dfdd80fd2b2e37a3d",
+      "family": "win.vyveva"
+    },
+    {
+      "file": "win.jripbot_auto.yar",
+      "sha256": "0290276d9cb578849d09c0a6939e10a8bf6e9911076a5495b1f87599d1ece2f0",
+      "family": "win.jripbot"
+    },
+    {
+      "file": "win.globeimposter_auto.yar",
+      "sha256": "cd28c7a8561c52ce31120ce635ac3c566bf290bc906a505928f90ded8992e6ea",
+      "family": "win.globeimposter"
+    },
+    {
+      "file": "win.redshawl_auto.yar",
+      "sha256": "6fae0efb132e2ff62aa58a2ec66de956e159056b418a54b35d17c1a91ae40093",
+      "family": "win.redshawl"
+    },
+    {
+      "file": "win.graphdrop_auto.yar",
+      "sha256": "eaa03ce5ba9e3666ce8cdbf5dfbeb9953b00a53223cb2277c1553ccf01088674",
+      "family": "win.graphdrop"
+    },
+    {
+      "file": "win.open_carrot_auto.yar",
+      "sha256": "621f46d7e2db3cbfb7a6a79ce5ede590ce44f435fadee7806d894eec06f0ddf1",
+      "family": "win.open_carrot"
+    },
+    {
+      "file": "win.breakthrough_loader_auto.yar",
+      "sha256": "a7d53ad34e4ed496b3d6c7d3c24fd84436d7773abaa596b064613bf9e8199407",
+      "family": "win.breakthrough_loader"
+    },
+    {
+      "file": "win.racket_auto.yar",
+      "sha256": "c28c44724ac8915e8f66aee9ed45e3f5290564b8e0bf8d29cb99e7c9fb4908f8",
+      "family": "win.racket"
+    },
+    {
+      "file": "win.bqtlock_auto.yar",
+      "sha256": "b979d253807f6b85550da0bbdf4a5b1a2fa358cd670abd2b2f51433f849a6e3b",
+      "family": "win.bqtlock"
+    },
+    {
+      "file": "win.mirrorkey_auto.yar",
+      "sha256": "bcb63b416c26917f8685e71d23f6ec2d35077369f737b83d275d38d6c6032d57",
+      "family": "win.mirrorkey"
+    },
+    {
+      "file": "win.avzhan_auto.yar",
+      "sha256": "6ca9389214992ca9dcd8eacba0cb512bb861ee85f90b71c616f38b376f921c50",
+      "family": "win.avzhan"
+    },
+    {
+      "file": "win.gaudox_auto.yar",
+      "sha256": "fe7c27b380426d3d5738487810327701891170a3f67dcd5c1fddb606e95b25f8",
+      "family": "win.gaudox"
+    },
+    {
+      "file": "win.mykings_spreader_auto.yar",
+      "sha256": "c3338993e2574f0683831b54c0afe132acafabe86c8485b35b191541e0aa8795",
+      "family": "win.mykings_spreader"
+    },
+    {
+      "file": "win.taleret_auto.yar",
+      "sha256": "4944b85f305201017c7dce355288724c18e04e711af1e2f8055ca379030b2ea8",
+      "family": "win.taleret"
+    },
+    {
+      "file": "win.newbounce_auto.yar",
+      "sha256": "fe1e60af5558f995d25124a424d089c4bec4c9294ad1a34a8d95631bb094c367",
+      "family": "win.newbounce"
+    },
+    {
+      "file": "win.roseam_auto.yar",
+      "sha256": "5d4b265a7a689680230e1f98748c62cb38d795f2c278aef6046e4b62e14a83dc",
+      "family": "win.roseam"
+    },
+    {
+      "file": "win.http_troy_auto.yar",
+      "sha256": "705d309c85bf7d88256db4f699d1ad276e084e5b0ad755f0c8879d2dcbf3d066",
+      "family": "win.http_troy"
+    },
+    {
+      "file": "win.avcrypt_auto.yar",
+      "sha256": "7c2cd34896ac8dc46c99d75c81ef8f7a57d3f1c9b760eac4a43ab843086a61ae",
+      "family": "win.avcrypt"
+    },
+    {
+      "file": "win.geminiduke_auto.yar",
+      "sha256": "08141221ce700c369e82df775d134685d987ee993850f7c246a42507599125f6",
+      "family": "win.geminiduke"
+    },
+    {
+      "file": "win.httpbrowser_auto.yar",
+      "sha256": "b48a521036f8f5a3eae3f7262b8a5cb75d602326df92f200a389d9cd18861b86",
+      "family": "win.httpbrowser"
+    },
+    {
+      "file": "win.disk_knight_auto.yar",
+      "sha256": "e8ab5698ad78cd1c933e95bd3897bde618408d8fe6088326016b7a308402e753",
+      "family": "win.disk_knight"
+    },
+    {
+      "file": "win.poweliks_auto.yar",
+      "sha256": "47f0c8c6fdf5acad7962363b129c93920282c334be6f8aa9d09a8e6bdddb0950",
+      "family": "win.poweliks"
+    },
+    {
+      "file": "win.pebbledash_auto.yar",
+      "sha256": "526620098de6a0974f64bccc474beb39dd5b0ab0ce276dd33d1c77dfbe3f1abe",
+      "family": "win.pebbledash"
+    },
+    {
+      "file": "win.smominru_auto.yar",
+      "sha256": "0009871773e6d636dd48a505108208f10c78f49751fe917da75240960448444b",
+      "family": "win.smominru"
+    },
+    {
+      "file": "win.dnespy_auto.yar",
+      "sha256": "dc57fe00509ca81dd701881edd3463505a74f45942d02e9f1c29c81f081fa982",
+      "family": "win.dnespy"
+    },
+    {
+      "file": "win.victorygate_auto.yar",
+      "sha256": "bb7cedef42eecf0383e00575c31eed3bcefc2824b4788330769a4c83aa6071c2",
+      "family": "win.victorygate"
+    },
+    {
+      "file": "win.fengine_auto.yar",
+      "sha256": "ffb5e82838b0d0f6160e26ebc9549e783734f0250627e67ce883f5c36598c175",
+      "family": "win.fengine"
+    },
+    {
+      "file": "win.rifdoor_auto.yar",
+      "sha256": "395f626d2eb601c584f431a071c615723a20a174e65e4cf6c2e1d7f9aa0925b6",
+      "family": "win.rifdoor"
+    },
+    {
+      "file": "win.skipper_auto.yar",
+      "sha256": "d168c49e8e203fefcb38679797758234d839a69134c474bad90b15ca9bb2adb8",
+      "family": "win.skipper"
+    },
+    {
+      "file": "win.aveo_auto.yar",
+      "sha256": "ea53fb3527744aa2d8aa0e22a7d57544c9990516e19ec852937497784e6b946c",
+      "family": "win.aveo"
+    },
+    {
+      "file": "win.pipemon_auto.yar",
+      "sha256": "ae37cb03d27d6b90266f96cd76ce2cc019dc742422ae31fa2b2387d74e81d024",
+      "family": "win.pipemon"
+    },
+    {
+      "file": "win.mewsei_auto.yar",
+      "sha256": "6dbb98708f5e1a62944b91222620d49ae3de3925685ae8d2c709e7dbc882571d",
+      "family": "win.mewsei"
+    },
+    {
+      "file": "win.unidentified_045_auto.yar",
+      "sha256": "9a26ef6322136fd702d39b00b4b7c42bd04942ef427ba44b4ad0e37f7f37f554",
+      "family": "win.unidentified_045"
+    },
+    {
+      "file": "win.ironhalo_auto.yar",
+      "sha256": "c3c4cb3a5a5985645298f7aefbee94a8214454d38ed8f03c1647b80cf7d5f045",
+      "family": "win.ironhalo"
+    },
+    {
+      "file": "win.doublefantasy_auto.yar",
+      "sha256": "dd47c193c367e764e716adafd1144b640d14af5dd4c93fc6dc7d37f1bb2a48b2",
+      "family": "win.doublefantasy"
+    },
+    {
+      "file": "win.agent_btz_auto.yar",
+      "sha256": "34a3dd848aa93e0f4e273274aecc58def7cd62710aeb4fced9e94f8c95b3cd35",
+      "family": "win.agent_btz"
+    },
+    {
+      "file": "win.duuzer_auto.yar",
+      "sha256": "8130aae5e16947136791a17283df5fa4d4d9d12de42d206e5562e0a40791c18e",
+      "family": "win.duuzer"
+    },
+    {
+      "file": "win.shadowpad_auto.yar",
+      "sha256": "1d3ffbdaba3d3e1222a9327dd344f40d0bdc17e9cc6702304bc47ec68cb54c19",
+      "family": "win.shadowpad"
+    },
+    {
+      "file": "win.ksl0t_auto.yar",
+      "sha256": "f4c0f68e676ea518dcc0567c4f87a03e4ddf3a3842ad81f42987004bc3e137ac",
+      "family": "win.ksl0t"
+    },
+    {
+      "file": "win.tabmsgsql_auto.yar",
+      "sha256": "7db8857e2784fe1d3f5d0ae05cf8043f2097593e946e1079c8e3b8c29384cc5c",
+      "family": "win.tabmsgsql"
+    },
+    {
+      "file": "win.treasurehunter_auto.yar",
+      "sha256": "73581bb74adf29df8ef69d8d171299222c2c767d0ba8bf3df73194d420618d15",
+      "family": "win.treasurehunter"
+    },
+    {
+      "file": "win.hi_zor_rat_auto.yar",
+      "sha256": "e0578cfef1f5c19af05cccecf6b145238ce1d851fd3b40790b6cab697377e1fe",
+      "family": "win.hi_zor_rat"
+    },
+    {
+      "file": "win.hunters_international_auto.yar",
+      "sha256": "c2730867e14918616fa133afda8621e104b5576838ed8cc9a4fc64599555cae5",
+      "family": "win.hunters_international"
+    },
+    {
+      "file": "win.yayih_auto.yar",
+      "sha256": "63da394adcfeea4d0d9bea46eef912192d82d642b55cd1628ff12171cb49c5aa",
+      "family": "win.yayih"
+    },
+    {
+      "file": "win.scranos_auto.yar",
+      "sha256": "680866ffd86a39eb19bc87ba690e64fa8f18c67804766655daac9b5b600b8ee1",
+      "family": "win.scranos"
+    },
+    {
+      "file": "win.flawedgrace_auto.yar",
+      "sha256": "bcaa8a5bd7741b9cae76fd5b3475219082f35148d559ca62a5da7b21b3f2e36b",
+      "family": "win.flawedgrace"
+    },
+    {
+      "file": "win.unidentified_041_auto.yar",
+      "sha256": "e4c0b84dc401bb93bee0dd35dd378e2d44d380a659c6501a068872f48b491ac7",
+      "family": "win.unidentified_041"
+    },
+    {
+      "file": "win.zitmo_auto.yar",
+      "sha256": "e0cae9dc574ba80c4c31befd153103e00e7ec0adf460d5ea3364af5ff1475ea5",
+      "family": "win.zitmo"
+    },
+    {
+      "file": "win.unidentified_075_auto.yar",
+      "sha256": "9eb9be349267e72b9ae9a44c3da729b4b5f7675e77141eca2ab1d0dd9848c4e7",
+      "family": "win.unidentified_075"
+    },
+    {
+      "file": "win.moker_auto.yar",
+      "sha256": "5b66cf3bcbbd67f31cf2f4a6ce99f2297be0eebafe3a46271665ad5342551437",
+      "family": "win.moker"
+    },
+    {
+      "file": "win.seduploader_auto.yar",
+      "sha256": "560f669a8db782a8418eea8daee4bb3af068697dd4bfdbcad06d013de3558aa4",
+      "family": "win.seduploader"
+    },
+    {
+      "file": "win.maoloa_auto.yar",
+      "sha256": "e322fbbd871be7ea8dbc6b9ac20ffa0bb62eab8775de6ae1d03dd5ccaa123620",
+      "family": "win.maoloa"
+    },
+    {
+      "file": "win.webc2_head_auto.yar",
+      "sha256": "e0d3075bf6eaf568d02a1a76caab12aaf1a1762ace578f0ed563bcd68ca1b147",
+      "family": "win.webc2_head"
+    },
+    {
+      "file": "win.gspy_auto.yar",
+      "sha256": "3d6d41f16584f6a969926d011e3c814c55b0ac9178fc1e50221cabc58714e67c",
+      "family": "win.gspy"
+    },
+    {
+      "file": "win.shortleash_auto.yar",
+      "sha256": "9caef48830728ada502e25974d4b5a49411956a53f3f08325636ea89595369cf",
+      "family": "win.shortleash"
+    },
+    {
+      "file": "win.mole_auto.yar",
+      "sha256": "05398e412b611732a576e22e61af92f4edc6619072c73cb14d61a943a7121492",
+      "family": "win.mole"
+    },
+    {
+      "file": "win.petya_auto.yar",
+      "sha256": "9f95b3c637a6b1f5655270bee82dbfc7f67cef846d853c5020c4d679204fd507",
+      "family": "win.petya"
+    },
+    {
+      "file": "win.animate_clipper_auto.yar",
+      "sha256": "16a86af45f0ec67d064bab4a8b56d2f215d586781d454a3f6c519079fd6deca2",
+      "family": "win.animate_clipper"
+    },
+    {
+      "file": "win.feodo_auto.yar",
+      "sha256": "a116831299ceade0c130f10b916b3ff731b41babd49d85b7add67874350819ac",
+      "family": "win.feodo"
+    },
+    {
+      "file": "win.sidewinder_auto.yar",
+      "sha256": "2e34f0709f620ff7161f51e4d75935edb6c2ab3968e0df8e01bd0c1da9121ba4",
+      "family": "win.sidewinder"
+    },
+    {
+      "file": "win.icexloader_auto.yar",
+      "sha256": "2604186a98fb0a6a21e4490daf97264342293073d69db74feceb08df4ee289d4",
+      "family": "win.icexloader"
+    },
+    {
+      "file": "win.snojan_auto.yar",
+      "sha256": "d5fb6e889fe1821c345e726589dd66019bdc99505e78c36b52e5adf427867a9e",
+      "family": "win.snojan"
+    },
+    {
+      "file": "win.wmighost_auto.yar",
+      "sha256": "6c9ad8781736317e5e74fc5ff05e5530fc08f3abc11fe6cf7363f4a677e17edd",
+      "family": "win.wmighost"
+    },
+    {
+      "file": "win.net_star_auto.yar",
+      "sha256": "5cb9964eac0704c58374e3b1b6e5ba7f274c42a0467d9e6eff3426ebbc72a4fb",
+      "family": "win.net_star"
+    },
+    {
+      "file": "win.dtrack_auto.yar",
+      "sha256": "01412b45068f9d27bf0309ae12c869d8d0fd9f03f790cd739b9b6c3b77eb75e5",
+      "family": "win.dtrack"
+    },
+    {
+      "file": "win.recordbreaker_auto.yar",
+      "sha256": "5f3aff60f21c718a062a667dd0917ee667c86d505f525cc1bbaa121fa27b8aee",
+      "family": "win.recordbreaker"
+    },
+    {
+      "file": "win.rokrat_auto.yar",
+      "sha256": "e496ec2ccb9be8f96e16b1529c0bcc925babbc03637a02c941538d39a2193253",
+      "family": "win.rokrat"
+    },
+    {
+      "file": "win.ghost_rat_auto.yar",
+      "sha256": "6b9f64ba196dd660697955191203162d2f187f9dbcdf66d1024f2245b5b4b69a",
+      "family": "win.ghost_rat"
+    },
+    {
+      "file": "win.darkmoon_auto.yar",
+      "sha256": "3f45fe277cd5736f5bc79cba0456515cdcc719086aaea637df38a7655ca3be32",
+      "family": "win.darkmoon"
+    },
+    {
+      "file": "win.buterat_auto.yar",
+      "sha256": "07bbc189691817742dabd74cd5b8351fb3d48483c4c6a39adfb81fea795bb666",
+      "family": "win.buterat"
+    },
+    {
+      "file": "win.pushdo_auto.yar",
+      "sha256": "6a367c0c11dde23dae22384f73407e3d94a54aeb311361a1b153ff14b24fbb1a",
+      "family": "win.pushdo"
+    },
+    {
+      "file": "win.velso_auto.yar",
+      "sha256": "3c823ce217d1372a79cefc0a914cbce093c86a0a23f0ef1664338c5a637221f8",
+      "family": "win.velso"
+    }
+  ],
+  "protocol_sha256": "72e847b7e4c874729aac718cf7e19c14b5bd6b0cc5dec1a2ba1b377a5642b9b0",
+  "limits": [
+    "Template-derived QA labels; not independent human annotation",
+    "Family aliases grouped; unknown aliases and semantic near-duplicates may remain",
+    "Source evidence is supplied at inference; this measures selection, not memorized TI knowledge",
+    "Demo families are excluded from training/validation/test",
+    "Source descriptions are historical claims, not current campaign observations"
+  ]
+}

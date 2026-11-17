@@ -1,0 +1,28 @@
+/home/cocomelonc/hacking/whiskers/.venv/lib/python3.13/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+test_family_record_does_not_attribute_an_incident (test_slm.APITests.test_family_record_does_not_attribute_an_incident) ... 2026-11-17 21:13:57,324  INFO  HTTP Request: POST http://testserver/api/slm/ask "HTTP/1.1 200 OK"
+ok
+test_invalid_selection_returns_no_answer (test_slm.APITests.test_invalid_selection_returns_no_answer) ... 2026-11-17 21:13:57,336  INFO  HTTP Request: POST http://testserver/api/slm/ask "HTTP/1.1 502 Bad Gateway"
+ok
+test_offline_family_never_fetches_member_content (test_slm.APITests.test_offline_family_never_fetches_member_content) ... ok
+test_slm_evidence_excludes_other_model_tags_and_no_remote_malpedia (test_slm.APITests.test_slm_evidence_excludes_other_model_tags_and_no_remote_malpedia) ... 2026-11-17 21:13:57,350  INFO  HTTP Request: POST http://testserver/api/slm/ask "HTTP/1.1 200 OK"
+ok
+test_unknown_family_returns_404 (test_slm.APITests.test_unknown_family_returns_404) ... 2026-11-17 21:13:57,358  INFO  HTTP Request: POST http://testserver/api/slm/ask "HTTP/1.1 404 Not Found"
+ok
+test_whitespace_and_oversized_questions_are_rejected (test_slm.APITests.test_whitespace_and_oversized_questions_are_rejected) ... 2026-11-17 21:13:57,368  INFO  HTTP Request: POST http://testserver/api/slm/ask "HTTP/1.1 400 Bad Request"
+2026-11-17 21:13:57,372  INFO  HTTP Request: POST http://testserver/api/slm/ask "HTTP/1.1 422 Unprocessable Entity"
+ok
+test_abstention_has_no_source_claim (test_slm.EvidenceContractTests.test_abstention_has_no_source_claim) ... ok
+test_answer_uses_source_bytes_instead_of_model_prose (test_slm.EvidenceContractTests.test_answer_uses_source_bytes_instead_of_model_prose) ... ok
+test_disabled_backend_makes_no_network_request (test_slm.EvidenceContractTests.test_disabled_backend_makes_no_network_request) ... ok
+test_empty_attribution_is_not_fabricated (test_slm.EvidenceContractTests.test_empty_attribution_is_not_fabricated) ... ok
+test_invalid_or_invented_claims_are_rejected (test_slm.EvidenceContractTests.test_invalid_or_invented_claims_are_rejected) ... ok
+test_rule_does_not_imply_measured_coverage (test_slm.EvidenceContractTests.test_rule_does_not_imply_measured_coverage) ... ok
+test_source_content_stays_in_user_message (test_slm.EvidenceContractTests.test_source_content_stays_in_user_message) ... ok
+test_valid_transport_has_pinned_schema_and_full_replay_evidence (test_slm.EvidenceContractTests.test_valid_transport_has_pinned_schema_and_full_replay_evidence) ... ok
+test_wrong_model_alias_is_rejected (test_slm.EvidenceContractTests.test_wrong_model_alias_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.092s
+
+OK

@@ -1,0 +1,6 @@
+{
+  "full_prompt_matches": true,
+  "hf_sha256": "b7715c65b2b6cd23d351244245fb4c7d0049a6b50267a7f0e12d212bbd316557",
+  "native_prompt_sha256": "b7715c65b2b6cd23d351244245fb4c7d0049a6b50267a7f0e12d212bbd316557",
+  "hf_tail": "question\":\"How are command hostnames resolved?\"}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+}

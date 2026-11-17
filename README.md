@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="whiskers-kitten.png" alt="Whiskers threat intelligence kitten" width="140" />
+  <img src="static/ti-cat.png" alt="Whiskers threat intelligence kitten" width="140" />
 </p>
 
 # whiskers  =^..^=
@@ -11,24 +11,48 @@ corpus full-text, read a tactical card per family, pivot by threat actor or capa
 recent-activity reports, export detection content, and - optionally - enrich and explain it all
 with a **local LLM running on your own CPU/GPU**. No cloud, no build step, no Node.    
 
-![img](./img/frontend.png)     
+![img](./img/frontend.png)
 
 Tactical, fast, offline-friendly. Subtle cat vibes in the logs.     
 
-[whiskers.db](https://t.me/maldevcc/210) - full corpus: tagged via GPU (`v1.0`), enjoy!     
+## Whiskers mini TI SLM
+
+An independent small-model track now lives in [slm/](slm/README.md): its own source-labelled
+dataset, training/export pipeline, evaluation, and a separate **mini TI** panel inside the
+family card. The existing Ollama features and worker keep their own configuration.
+The first model selects supporting Malpedia passages; answers quote those passages and
+preserve their source links. Public YARA text remains available for original-rule export.
+
+**Current status, 2026-11-17:** the independent Whiskers LoRA checkpoint has been trained on L20
+and exported to `Q4_K_M GGUF`. The Android chat uses its own package, a new TI analyst cat
+and source-backed responses. Training took `894.93` seconds. See [measured results](slm/README.md) and the Android build instructions.    
+
+The Android chat PoC has its own application ID, source evidence and model artifacts.     
+
+### Android chat
+
+In my case, Motorola moto g54 5G running the bundled Whiskers SLM. The chat and sources run on the device.     
+
+<p align="center">
+  <img src="img/android-home.png" alt="Whiskers home screen with its TI analyst cat and loaded local model" width="290" />
+  <img src="img/android-chat-emotet.png" alt="Whiskers answering an Emotet brief using cited Malpedia passages on Android" width="290" />
+  <img src="img/android-chat-flubot.png" alt="Whiskers answering a FluBot DNS question using a cited Malpedia passage on Android" width="290" />
+</p>
+
+For example, the Emotet brief took *11.2 seconds* and the FluBot DNS answer took *7.9 seconds* on the test phone. Answers preserve source text and expose the selected evidence.   
 
 ---
 
 ## Philosophy
 
-The backend is one `main.py`, the frontend is single `static/index.html` (vanilla JS + Tailwind via CDN). Storage is SQLite with FTS5 - a file, not a daemon. The only moving parts you add are optional: Malpedia membership for samples and YARA, and `ollama` for the AI features.    
+The backend is `main.py`, the frontend is a single `static/index.html` with inline CSS and vanilla JS. Storage is SQLite with FTS5 - a file, not a daemon. Optional AI backends are Ollama for the existing features and a separate local `llama.cpp` server for mini TI. The UI has no CDN dependency.
 
 ---
 
 ## Tech stack
 
 `Python 3.10+` · `FastAPI` · `malpediaclient` · `SQLite + FTS5` (stdlib) · `APScheduler` ·
-vanilla `HTML5 / JS` + `Tailwind` (CDN). Local LLM via `Ollama`. No NPM, no bundler.     
+vanilla `HTML5 / JS / CSS`. Local LLM via `Ollama`; optional mini TI SLM via `llama.cpp`. No NPM, no bundler.
 
 ```bash
 main.py            single-file FastAPI backend + scheduler
@@ -75,7 +99,7 @@ With a token, the family card gains **sample listings** and the full set of `TLP
 rules. Without one, those sections show a friendly "membership required" note and everything else
 keeps working. The header badge reflects your state - `● member` or `○ anonymous`.    
 
-![img](./img/membership.png)     
+![img](./img/membership.png)
 
 ---
 
@@ -90,7 +114,7 @@ descriptions: "android banking trojan stealing credentials" surfaces the right f
 zero keyword overlap. Vectors are precomputed once (GPU); a query embeds in ~50 ms on CPU. Each
 family card also shows a precomputed **similar families** list - zero query-time cost.    
 
-![img](./img/similarity.png)     
+![img](./img/similarity.png)
 
 **Family card** - canonical name, aliases, description, attribution, references, the full YARA
 rule text, and known samples. Threat-actor and capability tags are clickable.    
@@ -134,15 +158,15 @@ These appear on the family card and run only when you click - a few seconds on C
 
 **🧠 brief** - a tight SOC brief: what it is, primary risk, and two or three detection ideas. Cached after first generation.     
 
-![img](./img/brief.png)     
+![img](./img/brief.png)
 
 **🧠 explain rule** - plain-English explanation of a YARA rule and its false-positive risk; turns opaque auto-generated rules into something readable.    
 
-![img](./img/explain-rule.png)     
+![img](./img/explain-rule.png)
 
 **💬 ask this family** - ask a question answered *only* from that family's data; it refuses ("Not stated in Malpedia data") rather than guess.   
 
-![img](./img/ask.png)     
+![img](./img/ask.png)
 
 If Ollama isn't running, these report it inline and the rest of whiskers is unaffected.    
 
@@ -165,7 +189,7 @@ whole corpus (`OLLAMA_EMBED_MODEL`, default `nomic-embed-text`), and the web app
 concept-search and "similar families" cheaply on CPU. Like tagging, it's resumable and picks up
 only families without a vector.
 
-![img](./img/worker.png)     
+![img](./img/worker.png)
 
 It is resumable and `Ctrl-C` safe - each run only processes families **not yet tagged**, so it
 naturally picks up the new families Malpedia adds over time. Just re-run it; `--status` shows how
@@ -192,25 +216,11 @@ The worker is fully decoupled from the web app - run it whenever, the UI picks u
 
 ---
 
-## Choosing an Ollama model
+## Inference configuration
 
-The tagging and analysis tasks are *constrained* - classification and short, grounded summaries -
-so a small instruction-tuned model is the right tool. Reasoning models (qwen3) are run with
-thinking disabled (`think: false`); without that flag they emit huge `<think>` blocks that take
-minutes per call on CPU.
-
-CPU inference scales roughly with parameter count, so it is a quality-versus-time trade-off:
-
-| Model | ~per family | Full corpus (~3700) | Notes |
-| --- | --- | --- | --- |
-| `qwen3:1.7b` | ~7 s | ~7 h | default - fastest usable |
-| `gemma2:2b` | ~8 s | ~8 h | comparable quality, slightly slower |
-| `llama3.2:3b` | ~12 s | ~13 h | noticeably better tags |
-| `qwen3:4b` | ~16 s | ~17 h | better still, slowest of these |
-
-Stay on `qwen3:1.7b` to get coverage fast; switch to `llama3.2:3b` for a real quality bump
-overnight. Heavier models (8B–70B) are best saved for a GPU - the schema and UI don't change, you
-just set `OLLAMA_MODEL` and re-run.     
+The mini TI panel uses the Whiskers GGUF through its own local llama.cpp endpoint.
+Its model manifest, dataset and measurements are described in [slm/README.md](slm/README.md).
+The optional background tagger uses the model configured with `OLLAMA_MODEL`.
 
 ---
 
@@ -233,4 +243,4 @@ WHISKERS_PORT      bind port              (default 8000)
 
 Powered by **[cocomelonc](https://cocomelonc.github.io/)**. Inspired by and built on the **[Malpedia](https://malpedia.caad.fkie.fraunhofer.de/)** community knowledge base - all family intelligence comes from their work and contributors.    
 
-whiskers - low-noise threat intel - meow =^..^=    
+whiskers - low-noise threat intel =^..^=

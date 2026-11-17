@@ -22,9 +22,14 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from malpediaclient import Client
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 load_dotenv()
+
+from slm.client import WhiskersSLM
+from slm.protocol import family_evidence, rule_evidence
+from slm.protocol import canonical, render_selection
+from slm.policy import source_only_reason
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
 log = logging.getLogger("whiskers")
@@ -36,6 +41,10 @@ AUTHENTICATED = bool(MALPEDIA_API_KEY)
 DB_PATH = os.getenv("WHISKERS_DB", "whiskers.db")
 WINDOW_DAYS = {"day": 1, "week": 7, "month": 30}
 KEEP_REPORTS = 60  # history cap per stored monitor run
+OFFLINE = os.getenv("WHISKERS_OFFLINE", "0") == "1"
+if OFFLINE:
+    AUTHENTICATED = False
+slm = WhiskersSLM()
 
 # Local LLM (Ollama) - same model the worker uses; CPU-friendly, on-demand only.
 OLLAMA_HOST  = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
@@ -427,6 +436,14 @@ async def monitor(window: str) -> None:
 
 @functools.lru_cache(maxsize=256)
 def _family_detail(name: str) -> dict[str, Any]:
+    if OFFLINE:
+        with closing(_db()) as c:
+            row = c.execute("SELECT data FROM families WHERE name = ?", (name,)).fetchone()
+        if not row:
+            return {}
+        data = json.loads(row["data"])
+        return {**data, "yara": data.get("yara", []), "samples": [],
+                "samples_locked": True, "authenticated": False, "offline": True}
     client = _mp()
     data = client.get_family(name)
     if not isinstance(data, dict):
@@ -461,6 +478,13 @@ def _family_detail(name: str) -> dict[str, Any]:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    if OFFLINE:
+        if _corpus_size() == 0:
+            raise RuntimeError("Offline corpus is empty: run python -m slm.demo.seed first")
+        load_embeddings()
+        log.info("[=^..^=] offline snapshot: %d families; refresh/monitor disabled", _corpus_size())
+        yield
+        return
     if _corpus_size() == 0:
         log.info("[=^..^=] empty corpus - seeding from malpedia (one-time)…")
         await asyncio.to_thread(refresh_corpus)
@@ -614,6 +638,54 @@ def family(name: str):
 
 
 # -- local-LLM features (on-demand, CPU) ---------------------------
+
+class SLMAskReq(BaseModel):
+    name: str = Field(min_length=1, max_length=150)
+    question: str = Field(min_length=1, max_length=600)
+
+
+class SLMRuleReq(BaseModel):
+    rule: str = Field(min_length=1, max_length=65536)
+    question: str = Field(default="Explain what the rule states and its limitations.", min_length=1, max_length=600)
+
+
+@app.get("/api/slm/status")
+def slm_status():
+    return {**slm.status(), "corpus_mode": "offline snapshot" if OFFLINE else "Malpedia cache"}
+
+
+@app.post("/api/slm/ask")
+def slm_ask(req: SLMAskReq):
+    if not req.question.strip():
+        raise HTTPException(status_code=400, detail="Empty question")
+    with closing(_db()) as c:
+        row = c.execute("SELECT data FROM families WHERE name = ?", (req.name,)).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Family is not in the local corpus")
+    evidence = family_evidence(req.name, json.loads(row["data"]))
+    reason = source_only_reason(req.question)
+    if reason:
+        result = render_selection(canonical({"abstain": True, "evidence_ids": []}), evidence)
+        return {"name": req.name, "question": req.question, **result, "supplied_evidence": evidence,
+                "answer_origin": "source_policy", "policy_reason": reason, "model": None, "elapsed_ms": 0}
+    try:
+        return {"name": req.name, "question": req.question, **slm.answer(req.question.strip(), evidence)}
+    except (RuntimeError, OSError) as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+    except (ValueError, KeyError, IndexError, TypeError):
+        raise HTTPException(status_code=502, detail="SLM returned an invalid evidence selection; no answer published")
+
+
+@app.post("/api/slm/explain-yara")
+def slm_explain_yara(req: SLMRuleReq):
+    if not req.question.strip() or not req.rule.strip():
+        raise HTTPException(status_code=400, detail="Empty rule or question")
+    try:
+        return slm.answer(req.question.strip(), rule_evidence(req.rule))
+    except (RuntimeError, OSError) as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
+    except (ValueError, KeyError, IndexError, TypeError):
+        raise HTTPException(status_code=502, detail="SLM returned an invalid evidence selection; no answer published")
 
 def _family_context(name: str) -> str | None:
     """Assemble a compact text context for a family from the local corpus + tags.

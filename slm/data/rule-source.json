@@ -1,0 +1,7 @@
+{
+  "kind": "Public Malpedia YARA-Signator source snapshot",
+  "repository": "https://github.com/malpedia/signator-rules",
+  "commit": "eddaf26a30c6daff1b2350f52d0b5c11767f7552",
+  "files": 1687,
+  "license": "CC BY-SA 4.0"
+}

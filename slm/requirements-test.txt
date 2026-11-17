@@ -1,0 +1,2 @@
+httpx==0.28.1
+yara-python==4.5.4

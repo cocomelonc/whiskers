@@ -1,0 +1,6 @@
+torch==2.11.0+cu128
+transformers==5.22.1
+peft==0.21.2
+accelerate==1.15.0
+safetensors==0.8.0
+tokenizers==0.23.3

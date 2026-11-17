@@ -1,0 +1,10 @@
+{
+  "title": "whiskers - threat intel",
+  "slmBadge": "local SLM not loaded",
+  "slmSendDisabled": true,
+  "sourceMode": "offline snapshot",
+  "hasYara": true,
+  "bodyWidth": 1276,
+  "viewport": 1280,
+  "externalScripts": []
+}

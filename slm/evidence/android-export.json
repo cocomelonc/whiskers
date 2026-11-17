@@ -1,0 +1,65 @@
+{
+  "project": "whiskers-mini-ti",
+  "protocol": "whiskers-evidence-v1",
+  "family": "win.emotet",
+  "question": "Give me a brief.",
+  "answer": "While Emotet historically was a banking malware organized in a botnet, nowadays Emotet is mostly seen as infrastructure as a service for content delivery.\n\nFor example, since mid 2018 it is used by Trickbot for installs, which may also lead to ransomware attacks using Ryuk, a combination observed several times against high-profile targets.",
+  "selection": {
+    "abstain": false,
+    "evidence_ids": [
+      "description:0",
+      "description:1"
+    ]
+  },
+  "answer_origin": "slm_selection",
+  "supplied_evidence": [
+    {
+      "id": "identity",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "win.emotet: Emotet"
+    },
+    {
+      "id": "aliases",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "Aliases: Geodo, Heodo"
+    },
+    {
+      "id": "attribution",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "Malpedia-listed associations: GOLD CABIN, MUMMY SPIDER, Mealybug"
+    },
+    {
+      "id": "description:0",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "While Emotet historically was a banking malware organized in a botnet, nowadays Emotet is mostly seen as infrastructure as a service for content delivery."
+    },
+    {
+      "id": "description:1",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "For example, since mid 2018 it is used by Trickbot for installs, which may also lead to ransomware attacks using Ryuk, a combination observed several times against high-profile targets."
+    },
+    {
+      "id": "description:2",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "It is always stealing information from victims but what the criminal gang behind it did, was to open up another business channel by selling their infrastructure delivering additional malicious software."
+    },
+    {
+      "id": "description:3",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "From malware analysts it has been classified into epochs depending on command and control, payloads, and delivery solutions which change over time."
+    },
+    {
+      "id": "description:4",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "Emotet had been taken down by authorities in January 2021, though it appears to have sprung back to life in November 2021."
+    },
+    {
+      "id": "record_updated",
+      "source": "https:\/\/malpedia.caad.fkie.fraunhofer.de\/details\/win.emotet",
+      "text": "Malpedia record updated: 2026-10-28"
+    }
+  ],
+  "evidence_sha256": "ace1c934c128838ca9427819ccd41dc12680e1a1bd2a368f81d00f4e862edc63",
+  "model_sha256": "d11c0e620cf9bda778aba445dc9b6617112c0481b758919e5353a29031891eff",
+  "seconds": 11.217179
+}

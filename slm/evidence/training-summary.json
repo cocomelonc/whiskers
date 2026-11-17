@@ -1,0 +1,39 @@
+{
+  "project": "whiskers-mini-ti",
+  "base": "/data/slm/base/Qwen3-0.6B",
+  "seed": 20261117,
+  "dtype": "bfloat16",
+  "lora_rank": 16,
+  "lora_alpha": 32,
+  "epochs": 3,
+  "microbatch": 2,
+  "accum": 8,
+  "context": 2048,
+  "trainable": 10092544,
+  "steps": 360,
+  "seconds": 894.93,
+  "stats": {
+    "train": {
+      "input_rows": 1906,
+      "used": 1906,
+      "filtered_long": 0,
+      "tokens": 813344
+    },
+    "validation": {
+      "input_rows": 255,
+      "used": 255,
+      "filtered_long": 0,
+      "tokens": 108529
+    }
+  },
+  "validation_loss_before": 3.0313058635034262,
+  "validation_loss_after": 0.003860150405978791,
+  "peak_gpu_allocated_mib": 4303,
+  "torch": "2.11.0+cu128",
+  "gpu": "NVIDIA L20",
+  "data_sha256": {
+    "train": "c622298c6a5c8bc9ac5af4a5add1b6038c09e767425e7404e526b4d7619a8a1b",
+    "validation": "bd77f2c135fe4caa838b67c1072a40884b4ab127778ae07d9d1f78235db74cf1"
+  },
+  "note": "Family/alias-heldout, template-derived selection tasks; not detection accuracy. No resume checkpoint."
+}

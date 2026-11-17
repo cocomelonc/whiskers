@@ -1,0 +1,427 @@
+{
+  "backend": "lexical",
+  "model": "lexical-v1",
+  "split": "manual",
+  "n": 20,
+  "exact": 13,
+  "valid": 20,
+  "mean_evidence_f1": 0.65,
+  "unknown_exact": 6,
+  "unknown_n": 6,
+  "known_exact": 7,
+  "known_n": 14,
+  "latency_p50_s": 6.718648364767432e-05,
+  "latency_p95_s": 0.0008909429889172316,
+  "input_sha256": "03dbfff6d3a2c211d051660f632a043bad7e40ce6496ea58e9a2b34c115653bc",
+  "results": [
+    {
+      "id": "5c6480f76e90b9521c499fe658f324a8bd74e5f254561b8bfcdfb9b53b9db255",
+      "task": "manual",
+      "question": "How are command hostnames resolved?",
+      "target": {
+        "evidence_ids": [
+          "description:2"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 0.0008909429889172316
+    },
+    {
+      "id": "13d589a704b6b2584833983e60ab1f702b76a0af0c101e7232f264c5bcbc1b51",
+      "task": "manual",
+      "question": "Which country did the banking malware initially focus on?",
+      "target": {
+        "evidence_ids": [
+          "description:0"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "description:0"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 0.00011769100092351437
+    },
+    {
+      "id": "d38e3f2bd3d77b6bc61c4d1be733c00c668e314eb1a20d50f6a3ba07be4ad02b",
+      "task": "manual",
+      "question": "Which sorts of equipment are in its victim population?",
+      "target": {
+        "evidence_ids": [
+          "description:2"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 9.761902038007975e-05
+    },
+    {
+      "id": "611c8471a98f0f5cfacaa8a44e557d9a8375aeedbc575e21f170ac199923c036",
+      "task": "manual",
+      "question": "What operating system is mentioned?",
+      "target": {
+        "evidence_ids": [
+          "description:0"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 7.88759789429605e-05
+    },
+    {
+      "id": "9bb5fa40e83c510935a5ce8974f368cbddff61441f944ad980a74f677e5407a7",
+      "task": "manual",
+      "question": "Which channels can carry staging traffic?",
+      "target": {
+        "evidence_ids": [
+          "description:3"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "description:3"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 0.00012476902338676155
+    },
+    {
+      "id": "3f8e8f1943e8c353a2ace40fb5b6add12feb942d96b4b7085fc8994c7a506b48",
+      "task": "manual",
+      "question": "Why might payload inspection on disk miss Beacon?",
+      "target": {
+        "evidence_ids": [
+          "description:2"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "description:2"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 0.00011423698742873967
+    },
+    {
+      "id": "3730931ccdce6b29e334af103750ca2cd068c53acb0f7e77dab7b74115b4bf90",
+      "task": "manual",
+      "question": "What loader development kit is named?",
+      "target": {
+        "evidence_ids": [
+          "description:4"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "description:3"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 0.00010556800407357514
+    },
+    {
+      "id": "22dac84779638a55b122a8c98f3e020eb36d12b84cce77d29fbf0fdb4bb2736d",
+      "task": "manual",
+      "question": "Which evidence describes the remote administration features?",
+      "target": {
+        "evidence_ids": [
+          "description:2"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "description:0"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 9.871699148789048e-05
+    },
+    {
+      "id": "167393ff5c47fc1f1d6c42d2dd27dee8aa8a0fb1f3d656d5c4a19616a82a52a7",
+      "task": "manual",
+      "question": "Which two other malware families are named in the delivery example?",
+      "target": {
+        "evidence_ids": [
+          "description:1"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "description:3"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 0.00010844899225048721
+    },
+    {
+      "id": "6bfd17a31b64bc27fe627b33beb7abde76a97bb819a31c1804d04df086c88881",
+      "task": "manual",
+      "question": "What historical disruption is mentioned?",
+      "target": {
+        "evidence_ids": [
+          "description:4"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": false,
+      "evidence_f1": 0.0,
+      "seconds": 9.925701306201518e-05
+    },
+    {
+      "id": "7b27a4e81e6111c6eaade3666e02c9b2ebb9ddd6306d6403edc2e58cb92dd857",
+      "task": "manual",
+      "question": "Is there an alternate family name in the supplied record?",
+      "target": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 4.246298340149224e-05
+    },
+    {
+      "id": "719ffc81a39dd5461d7093dd39969514c7806db32b7fbff4c00f80d31eaa8c91",
+      "task": "manual",
+      "question": "Can you attribute this family to an operator from this record?",
+      "target": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 4.643600550480187e-05
+    },
+    {
+      "id": "58e21e0a504853a6fa3730356243ad662649bd3d6c4d36fc35cef870d4329041",
+      "task": "manual",
+      "question": "Has the analyst's machine been compromised?",
+      "target": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 4.722099401988089e-05
+    },
+    {
+      "id": "6ffb0f66652ee1b3fd034127221990cff2b5c19828d25b288bce3a8df6deff71",
+      "task": "manual",
+      "question": "Which specific actor operated the Beacon I found?",
+      "target": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 4.5630993554368615e-05
+    },
+    {
+      "id": "70dac1d1f1baddfa5b93d87a1965331a2ef18bc9faba6fef3fb4cf0e18e2ba80",
+      "task": "manual",
+      "question": "Give the live botnet controller address.",
+      "target": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 3.831001231446862e-05
+    },
+    {
+      "id": "bf22b3673e119bb605767975871884b555e08d83182b82b8bdbdf5ec6d5198eb",
+      "task": "manual",
+      "question": "Is the cached description proof an indicator is malicious today?",
+      "target": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "selection": {
+        "evidence_ids": [],
+        "abstain": true
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 4.0022016037255526e-05
+    },
+    {
+      "id": "c5d21ed4003bcabe12f4d471190f74a5afc083301ea51baa8f65eba9cee136ad",
+      "task": "manual",
+      "question": "What other labels might a case note use for this family?",
+      "target": {
+        "evidence_ids": [
+          "aliases"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "aliases"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 4.7901994548738e-05
+    },
+    {
+      "id": "dcc6449ea55ec597d9b011f41ee0bd047d4ed1694ec1533ebb0b0aaa2e01d11f",
+      "task": "manual",
+      "question": "Which record identifier should I use for a lookup?",
+      "target": {
+        "evidence_ids": [
+          "identity"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "identity"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 5.5496988352388144e-05
+    },
+    {
+      "id": "40b759ffbd6943719f1bb8ee1eaafe2ec2a002d6a689741f6bff79424228ec59",
+      "task": "manual",
+      "question": "Which group labels appear in Malpedia's association field?",
+      "target": {
+        "evidence_ids": [
+          "attribution"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "attribution"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 5.0125003326684237e-05
+    },
+    {
+      "id": "e68f92ec064852f7511f737c705cfd80bc19dd9ae157e4555ec0e7202f635371",
+      "task": "manual",
+      "question": "When was this cached metadata last updated?",
+      "target": {
+        "evidence_ids": [
+          "record_updated"
+        ],
+        "abstain": false
+      },
+      "selection": {
+        "evidence_ids": [
+          "record_updated"
+        ],
+        "abstain": false
+      },
+      "valid": true,
+      "error": null,
+      "exact": true,
+      "evidence_f1": 1.0,
+      "seconds": 5.237900768406689e-05
+    }
+  ],
+  "limits": "Small source-selection benchmark; not malware recall, false-positive rate, or a prompt-injection guarantee."
+}

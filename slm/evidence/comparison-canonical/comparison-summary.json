@@ -1,0 +1,78 @@
+{
+  "comparison": [
+    {
+      "backend": "slm",
+      "model": "whiskers-base-0.6b",
+      "split": "manual",
+      "n": 20,
+      "exact": 0,
+      "valid": 17,
+      "mean_evidence_f1": 0.305,
+      "unknown_exact": 0,
+      "unknown_n": 6,
+      "known_exact": 0,
+      "known_n": 14,
+      "latency_p50_s": 1.0483517739921808,
+      "latency_p95_s": 2.0042902019340545,
+      "input_sha256": "03dbfff6d3a2c211d051660f632a043bad7e40ce6496ea58e9a2b34c115653bc",
+      "limits": "Small source-selection benchmark; not malware recall, false-positive rate, or a prompt-injection guarantee."
+    },
+    {
+      "backend": "slm",
+      "model": "whiskers-base-0.6b",
+      "split": "test",
+      "n": 236,
+      "exact": 11,
+      "valid": 178,
+      "mean_evidence_f1": 0.19138418079096045,
+      "unknown_exact": 0,
+      "unknown_n": 113,
+      "known_exact": 11,
+      "known_n": 123,
+      "latency_p50_s": 0.8141316371038556,
+      "latency_p95_s": 1.2629456019494683,
+      "input_sha256": "2874633daf5a996b0a85f6bc198b635ffab0033aee318887172f4e30da9cfb8f",
+      "limits": "Small source-selection benchmark; not malware recall, false-positive rate, or a prompt-injection guarantee."
+    },
+    {
+      "backend": "slm",
+      "model": "whiskers-ti-0.6b-v0.1",
+      "split": "manual",
+      "n": 20,
+      "exact": 16,
+      "valid": 20,
+      "mean_evidence_f1": 0.8,
+      "unknown_exact": 5,
+      "unknown_n": 6,
+      "known_exact": 11,
+      "known_n": 14,
+      "latency_p50_s": 0.40825267892796546,
+      "latency_p95_s": 1.2639112509787083,
+      "input_sha256": "03dbfff6d3a2c211d051660f632a043bad7e40ce6496ea58e9a2b34c115653bc",
+      "limits": "Small source-selection benchmark; not malware recall, false-positive rate, or a prompt-injection guarantee."
+    },
+    {
+      "backend": "slm",
+      "model": "whiskers-ti-0.6b-v0.1",
+      "split": "test",
+      "n": 236,
+      "exact": 231,
+      "valid": 236,
+      "mean_evidence_f1": 0.9872881355932204,
+      "unknown_exact": 113,
+      "unknown_n": 113,
+      "known_exact": 118,
+      "known_n": 123,
+      "latency_p50_s": 0.35542981908656657,
+      "latency_p95_s": 0.7094785571098328,
+      "input_sha256": "2874633daf5a996b0a85f6bc198b635ffab0033aee318887172f4e30da9cfb8f",
+      "limits": "Small source-selection benchmark; not malware recall, false-positive rate, or a prompt-injection guarantee."
+    }
+  ],
+  "both_models": "Q4_K_M, same prompts/schema/evidence/questions, thinking disabled",
+  "limits": "GPU evaluation; not Android CPU timing or malware detection accuracy",
+  "model_sha256": {
+    "original-base-Q4_K_M.gguf": "e3578f1ddf231d93c2ad468289dd33a5258b94c79a221c07c7266fe9a7d8d592",
+    "whiskers-ti-0.6b-Q4_K_M.gguf": "d11c0e620cf9bda778aba445dc9b6617112c0481b758919e5353a29031891eff"
+  }
+}

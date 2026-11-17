@@ -1,0 +1,5 @@
+{
+  "exact_description_cross_split_count": 0,
+  "cross_split_sets": [],
+  "scope": "Normalized complete supplied description passages; not unknown aliases or semantic near-duplicates"
+}

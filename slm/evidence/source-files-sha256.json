@@ -1,0 +1,13 @@
+{
+  "slm/__init__.py": "960307f05b21e3586ddf06c2ac8e6219ef5f80014dabd387c7caae20e4d5c752",
+  "slm/client.py": "a9c2763eb789cb933a0a21257fbd9b494397f8e4daa5bf71f87ea57d0c62d33f",
+  "slm/demo/__init__.py": "ac7708c92f430674049ee03d8c7a5060384119ee7521bb1c2abe9a28a56cdefb",
+  "slm/demo/seed.py": "504758dd4fda61960ed1c6cf1243a81bf25318d51c6c26799dab56497d17113b",
+  "slm/protocol.py": "72e847b7e4c874729aac718cf7e19c14b5bd6b0cc5dec1a2ba1b377a5642b9b0",
+  "slm/training/__init__.py": "fd82ab2e13eed9b0c6858f675fcb1961530f917f3192e3e814fe6a9445ea1885",
+  "slm/training/evaluate.py": "179a89688b621a53e4520defd4efbd5acebb17e3cfc1cccab7f5b58334f2a190",
+  "slm/training/fetch_base.py": "6c5052e5dac8ae89ac962ed3200bea9ec54c36e32540760745b3a08a9e506864",
+  "slm/training/fetch_sources.py": "205f89e144419687135fef4ed960903359bb6e31f19c02a2b5f5ad8d6e567d06",
+  "slm/training/prepare.py": "81f2b6fce2437779d8c4880c9a868fece24e8b530620323a2a82c9fb0236a593",
+  "slm/training/train.py": "016a263077c8c3402fed7d113fa4cbe28850c90b29fd83779c333470010d55a3"
+}

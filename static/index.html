@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>whiskers - threat intel</title>
-  <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="/static/ti-cat.png" />
   <style>
     :root {
       --bg:      #15121E;
@@ -202,6 +201,11 @@
     .llm-btn:hover:not(:disabled) { background: rgba(181,123,255,0.2); border-color: rgba(181,123,255,0.55); }
     .llm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
     .llm-out { margin-top: 8px; font-size: 0.79rem; color: var(--text2); line-height: 1.65; white-space: pre-wrap; }
+    .slm-card { background: linear-gradient(135deg,rgba(114,217,245,.055),rgba(181,123,255,.065)); border:1px solid rgba(114,217,245,.22); border-radius:12px; padding:18px; }
+    .slm-question { width:100%; resize:vertical; min-height:68px; height:68px; padding:12px; font:inherit; font-size:.8rem; }
+    .slm-answer { margin-top:12px; padding:13px; background:var(--bg); border:1px solid var(--sep); border-radius:9px; }
+    .slm-answer p { font-size:.79rem; line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .slm-toolbar { display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin-top:10px; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
@@ -329,7 +333,7 @@
   <header style="border-bottom: 1px solid var(--sep); padding: 14px 0; flex-shrink: 0;">
     <div style="max-width: 880px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center; gap: 9px;">
-        <span style="font-size: 1.15rem; line-height: 1;">😺</span>
+        <img src="/static/ti-cat.png" alt="Whiskers" width="30" height="30" style="object-fit:contain;" />
         <span class="logo-gradient">whiskers</span>
         <span style="color: var(--sep); font-size: 0.8rem; margin: 0 2px;">/</span>
         <span style="color: var(--dim); font-size: 0.68rem; letter-spacing: 0.02em;">threat intel</span>
@@ -406,7 +410,7 @@
   <footer style="border-top: 1px solid var(--sep); padding: 14px 0; flex-shrink: 0;">
     <div style="max-width: 880px; margin: 0 auto; padding: 0 28px; text-align: center; display:flex; flex-direction:column; gap:3px;">
       <span style="color: var(--sep); font-size: 0.62rem; letter-spacing: 0.06em;">
-        whiskers - low-noise threat intel - meow =^..^=
+        whiskers - low-noise threat intel =^..^=
       </span>
       <span style="color: var(--dim); font-size: 0.62rem; letter-spacing: 0.06em;">
         powered by <span style="color:var(--purple);">cocomelonc</span>
@@ -425,6 +429,7 @@
     const statusEl    = $('status');
     const searchBtn   = $('search-btn');
     const searchInput = $('search-input');
+    let slmState = {enabled:false, ready:false};
 
     // - helpers ------------------------
 
@@ -606,7 +611,7 @@
         <div class="card fadein" style="overflow: hidden;">
 
           <!-- header -->
-          <div style="padding: 22px 24px 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+          <div style="padding: 22px 24px 18px; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px;">
             <div>
               <div class="label" style="margin-bottom: 5px;">malware family</div>
               <h2 style="
@@ -631,6 +636,29 @@
           <hr class="divider" />
 
           <div id="brief-box"></div>
+          <div style="padding:18px 24px;">
+            <section class="slm-card" aria-label="Whiskers mini TI SLM">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div><div class="label" style="color:var(--cyan);margin-bottom:6px;">whiskers mini TI</div>
+                  <p style="font-size:.84rem;">Ask the evidence. Keep the source.</p></div>
+                <span id="slm-badge" class="pill pill-cyan">checking local model…</span>
+              </div>
+              <p style="font-size:.72rem;color:var(--dim);line-height:1.6;margin:10px 0;">A local SLM selects passages from this family record. Answers quote the source; missing information stays unknown.</p>
+              <div class="slm-toolbar" style="margin-bottom:10px;">
+                <button class="llm-btn" data-slmq="Give me a brief.">brief</button>
+                <button class="llm-btn" data-slmq="What aliases does this family have?">aliases</button>
+                <button class="llm-btn" data-slmq="Which actors are listed in this record?">listed actors</button>
+                <button class="llm-btn" data-slmq="What is its current C2 address?">current C2?</button>
+              </div>
+              <textarea id="slm-question" class="search-input slm-question" aria-label="Question for the TI SLM" placeholder="Ask a question about the supplied family evidence…" maxlength="600"></textarea>
+              <div class="slm-toolbar">
+                <button id="slm-send" class="llm-btn" style="padding:8px 14px;">ask mini TI →</button>
+                <button id="slm-recheck" class="btn-back">check model</button>
+                <span id="slm-source-mode" style="margin-left:auto;font-size:.64rem;color:var(--dim);"></span>
+              </div>
+              <div id="slm-answers" aria-live="polite"></div>
+            </section>
+          </div>
           <div id="similar-box"></div>
 
           ${section('aliases',
@@ -669,6 +697,7 @@
                 <pre class="mono-block" style="margin-top:6px;max-height:300px;overflow:auto;">${esc(y.rule)}</pre>
                 <div style="margin-top:6px;">
                   <button class="llm-btn" data-yexp="${yi}">🧠 explain rule</button>
+                  <button class="llm-btn" data-yslm="${yi}">mini TI · rule evidence</button>
                   <div class="llm-out" id="yexp-out-${yi}"></div>
                 </div>
               </details>
@@ -781,12 +810,25 @@
       loadSimilar(name);
 
       // local-LLM: SOC brief
+      bindSLM(name);
       $('brief-btn').addEventListener('click', (e) => {
         e.target.disabled = true;
         loadBrief(name).finally(() => { e.target.disabled = false; });
       });
 
       // local-LLM: explain a YARA rule
+      content.querySelectorAll('[data-yslm]').forEach(btn => btn.addEventListener('click', async () => {
+        const out = $(`yexp-out-${btn.dataset.yslm}`);
+        btn.disabled = true;
+        out.textContent = 'Selecting rule evidence locally…';
+        try {
+          const response = await fetch('/api/slm/explain-yara', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rule:yara[+btn.dataset.yslm].rule})});
+          if (!response.ok) throw new Error(await llmError(response));
+          const result = await response.json();
+          out.textContent = `Quoted rule evidence · ${result.model}\n\n${result.answer}`;
+        } catch (error) { out.textContent = error.message; }
+        finally { if (document.contains(btn)) btn.disabled = !slmState.ready; }
+      }));
       content.querySelectorAll('[data-yexp]').forEach(btn =>
         btn.addEventListener('click', () =>
           explainYara(yara[+btn.dataset.yexp].rule, $(`yexp-out-${btn.dataset.yexp}`), btn)
@@ -850,6 +892,84 @@
         </div></div>`;
       } catch (err) {
         box.innerHTML = `<div style="padding:14px 24px 0;"><div class="llm-box" style="border-color:rgba(255,120,117,0.3);"><span style="color:var(--red);font-size:0.76rem;">[!] ${esc(err.message)}</span></div></div>`;
+      }
+    }
+
+    async function refreshSLMStatus() {
+      try {
+        const response = await fetch('/api/slm/status');
+        if (!response.ok) throw new Error('status unavailable');
+        slmState = await response.json();
+      } catch { slmState = {enabled:false,ready:false}; }
+      const badge = $('slm-badge');
+      if (!badge) return;
+      badge.textContent = slmState.ready ? slmState.model : 'local SLM not loaded';
+      badge.style.color = slmState.ready ? 'var(--cyan)' : 'var(--dim)';
+      $('slm-source-mode').textContent = slmState.corpus_mode || '';
+      $('slm-send').disabled = !slmState.ready;
+      content.querySelectorAll('[data-slmq]').forEach(b => { b.disabled = !slmState.ready; });
+      content.querySelectorAll('[data-yslm]').forEach(b => { b.disabled = !slmState.ready; });
+    }
+
+    function bindSLM(name) {
+      refreshSLMStatus();
+      $('slm-recheck').addEventListener('click', refreshSLMStatus);
+      const input = $('slm-question');
+      $('slm-send').addEventListener('click', () => askSLM(name));
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          if (slmState.ready && !$('slm-send').disabled) askSLM(name);
+        }
+      });
+      content.querySelectorAll('[data-slmq]').forEach(button => button.addEventListener('click', () => {
+        input.value = button.dataset.slmq;
+        askSLM(name);
+      }));
+    }
+
+    async function askSLM(name) {
+      const input = $('slm-question'), button = $('slm-send'), answers = $('slm-answers');
+      const question = input.value.trim();
+      if (!question || !slmState.ready || button.disabled) return;
+      button.disabled = true;
+      const block = document.createElement('div');
+      block.className = 'slm-answer';
+      block.innerHTML = `<div class="label" style="margin-bottom:8px;">${esc(question)}</div><p>${llmThinking('selecting supporting evidence locally…')}</p>`;
+      answers.prepend(block);
+      try {
+        const response = await fetch('/api/slm/ask', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,question})});
+        if (!response.ok) throw new Error(await llmError(response));
+        const result = await response.json();
+        block.querySelector('p').textContent = result.answer;
+        const trace = document.createElement('div');
+        trace.className = 'slm-toolbar';
+        const label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = result.answer_origin === 'source_policy' ? 'source policy · no model inference' : (result.abstained ? 'unknown in source' : 'quoted evidence · selected locally') + ` · ${result.elapsed_ms} ms`;
+        trace.append(label);
+        for (const evidence of result.evidence || []) {
+          const link = document.createElement('a');
+          link.className = 'ref-link';
+          link.textContent = evidence.id;
+          if (evidence.source.startsWith('https://malpedia.caad.fkie.fraunhofer.de/details/')) {
+            link.href = evidence.source; link.target = '_blank'; link.rel = 'noopener';
+          }
+          trace.append(link);
+        }
+        const save = document.createElement('button');
+        save.className = 'btn-back'; save.textContent = 'export evidence';
+        save.addEventListener('click', () => {
+          const url = URL.createObjectURL(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}));
+          const a = document.createElement('a'); a.href=url; a.download=`whiskers-${name}-evidence.json`; a.click();
+          setTimeout(() => URL.revokeObjectURL(url),1000);
+        });
+        trace.append(save); block.append(trace); input.value = '';
+      } catch (error) {
+        block.querySelector('p').textContent = error.message;
+        block.querySelector('p').style.color = 'var(--red)';
+      } finally {
+        if (document.contains(button)) button.disabled = !slmState.ready;
       }
     }
 

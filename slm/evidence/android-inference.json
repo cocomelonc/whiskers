@@ -1,0 +1,286 @@
+{
+  "model_sha256": "d11c0e620cf9bda778aba445dc9b6617112c0481b758919e5353a29031891eff",
+  "model": "whiskers-ti-0.6b-v0.1",
+  "device": "moto g54 5G",
+  "raw_neural_evaluation": true,
+  "source_policy_applied": false,
+  "n": 20,
+  "valid": 20,
+  "exact": 15,
+  "results": [
+    {
+      "family": "apk.flubot",
+      "question": "How are command hostnames resolved?",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 9.677549001,
+      "valid": true,
+      "exact": false,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": [
+        "description:2"
+      ]
+    },
+    {
+      "family": "apk.flubot",
+      "question": "Which country did the banking malware initially focus on?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:0\"]}",
+      "seconds": 3.409731923,
+      "valid": true,
+      "exact": true,
+      "answer": "PRODAFT describes FluBot as a banking malware which originally targeted Spain.",
+      "ids": [
+        "description:0"
+      ],
+      "expected_ids": [
+        "description:0"
+      ]
+    },
+    {
+      "family": "elf.mirai",
+      "question": "Which sorts of equipment are in its victim population?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:2\"]}",
+      "seconds": 9.240399385,
+      "valid": true,
+      "exact": true,
+      "answer": "Nowadays it targets a wide range of networked embedded devices such as IP cameras, home routers (many vendors involved), and other IoT devices.",
+      "ids": [
+        "description:2"
+      ],
+      "expected_ids": [
+        "description:2"
+      ]
+    },
+    {
+      "family": "elf.mirai",
+      "question": "What operating system is mentioned?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:0\"]}",
+      "seconds": 3.096925538,
+      "valid": true,
+      "exact": true,
+      "answer": "Mirai is one of the first significant botnets targeting exposed networking devices running Linux.",
+      "ids": [
+        "description:0"
+      ],
+      "expected_ids": [
+        "description:0"
+      ]
+    },
+    {
+      "family": "win.cobalt_strike",
+      "question": "Which channels can carry staging traffic?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:3\"]}",
+      "seconds": 17.80957254,
+      "valid": true,
+      "exact": true,
+      "answer": "It supports C2 and staging over HTTP, HTTPS, DNS, SMB named pipes as well as forward and reverse TCP; Beacons can be daisy-chained.",
+      "ids": [
+        "description:3"
+      ],
+      "expected_ids": [
+        "description:3"
+      ]
+    },
+    {
+      "family": "win.cobalt_strike",
+      "question": "Why might payload inspection on disk miss Beacon?",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 4.646165539,
+      "valid": true,
+      "exact": false,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": [
+        "description:2"
+      ]
+    },
+    {
+      "family": "win.cobalt_strike",
+      "question": "What loader development kit is named?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:4\"]}",
+      "seconds": 5.412673231,
+      "valid": true,
+      "exact": true,
+      "answer": "Cobalt Strike comes with a toolkit for developing shellcode loaders, called Artifact Kit.",
+      "ids": [
+        "description:4"
+      ],
+      "expected_ids": [
+        "description:4"
+      ]
+    },
+    {
+      "family": "win.plugx",
+      "question": "Which evidence describes the remote administration features?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:1\"]}",
+      "seconds": 13.122105923,
+      "valid": true,
+      "exact": false,
+      "answer": "Once the device is infected, an attacker can remotely execute several kinds of commands on the affected system.",
+      "ids": [
+        "description:1"
+      ],
+      "expected_ids": [
+        "description:2"
+      ]
+    },
+    {
+      "family": "win.emotet",
+      "question": "Which two other malware families are named in the delivery example?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:1\"]}",
+      "seconds": 12.702840693,
+      "valid": true,
+      "exact": true,
+      "answer": "For example, since mid 2018 it is used by Trickbot for installs, which may also lead to ransomware attacks using Ryuk, a combination observed several times against high-profile targets.",
+      "ids": [
+        "description:1"
+      ],
+      "expected_ids": [
+        "description:1"
+      ]
+    },
+    {
+      "family": "win.emotet",
+      "question": "What historical disruption is mentioned?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"description:0\"]}",
+      "seconds": 4.328564308,
+      "valid": true,
+      "exact": false,
+      "answer": "While Emotet historically was a banking malware organized in a botnet, nowadays Emotet is mostly seen as infrastructure as a service for content delivery.",
+      "ids": [
+        "description:0"
+      ],
+      "expected_ids": [
+        "description:4"
+      ]
+    },
+    {
+      "family": "win.xworm",
+      "question": "Is there an alternate family name in the supplied record?",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 4.804885231,
+      "valid": true,
+      "exact": true,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": []
+    },
+    {
+      "family": "apk.flubot",
+      "question": "Can you attribute this family to an operator from this record?",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 8.360344308,
+      "valid": true,
+      "exact": true,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": []
+    },
+    {
+      "family": "win.emotet",
+      "question": "Has the analyst's machine been compromised?",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 11.943799693,
+      "valid": true,
+      "exact": true,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": []
+    },
+    {
+      "family": "win.cobalt_strike",
+      "question": "Which specific actor operated the Beacon I found?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"attribution\"]}",
+      "seconds": 17.240972617,
+      "valid": true,
+      "exact": false,
+      "answer": "Malpedia-listed associations: APT 29, APT29, APT32, APT41, AQUATIC PANDA, Anunak, Cobalt, Codoso, CopyKittens, DarkHydrus, Earth Baxia, FIN6, FIN7, Leviathan, Mustang Panda, Shell Crew, Stone Panda, TianWu, UNC1878, UNC2452, Winnti Umbrella",
+      "ids": [
+        "attribution"
+      ],
+      "expected_ids": []
+    },
+    {
+      "family": "elf.mirai",
+      "question": "Give the live botnet controller address.",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 8.403955385,
+      "valid": true,
+      "exact": true,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": []
+    },
+    {
+      "family": "win.emotet",
+      "question": "Is the cached description proof an indicator is malicious today?",
+      "raw": "{\"abstain\":true,\"evidence_ids\":[]}",
+      "seconds": 12.008525308,
+      "valid": true,
+      "exact": true,
+      "answer": "Not stated in the supplied Malpedia evidence.",
+      "ids": [],
+      "expected_ids": []
+    },
+    {
+      "family": "win.plugx",
+      "question": "What other labels might a case note use for this family?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"aliases\"]}",
+      "seconds": 12.933504539,
+      "valid": true,
+      "exact": true,
+      "answer": "Aliases: Destroy RAT, Kaba, Korplug, Sogu, TIGERPLUG, RedDelta",
+      "ids": [
+        "aliases"
+      ],
+      "expected_ids": [
+        "aliases"
+      ]
+    },
+    {
+      "family": "win.cobalt_strike",
+      "question": "Which record identifier should I use for a lookup?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"identity\"]}",
+      "seconds": 16.988546155,
+      "valid": true,
+      "exact": true,
+      "answer": "win.cobalt_strike: Cobalt Strike",
+      "ids": [
+        "identity"
+      ],
+      "expected_ids": [
+        "identity"
+      ]
+    },
+    {
+      "family": "win.emotet",
+      "question": "Which group labels appear in Malpedia's association field?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"attribution\"]}",
+      "seconds": 12.737518155,
+      "valid": true,
+      "exact": true,
+      "answer": "Malpedia-listed associations: GOLD CABIN, MUMMY SPIDER, Mealybug",
+      "ids": [
+        "attribution"
+      ],
+      "expected_ids": [
+        "attribution"
+      ]
+    },
+    {
+      "family": "win.xworm",
+      "question": "When was this cached metadata last updated?",
+      "raw": "{\"abstain\":false,\"evidence_ids\":[\"record_updated\"]}",
+      "seconds": 5.133614462,
+      "valid": true,
+      "exact": true,
+      "answer": "Malpedia record updated: 2026-10-28",
+      "ids": [
+        "record_updated"
+      ],
+      "expected_ids": [
+        "record_updated"
+      ]
+    }
+  ]
+}

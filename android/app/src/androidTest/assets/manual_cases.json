@@ -1,0 +1,22 @@
+[
+  {"family":"apk.flubot","question":"How are command hostnames resolved?","ids":["description:2"]},
+  {"family":"apk.flubot","question":"Which country did the banking malware initially focus on?","ids":["description:0"]},
+  {"family":"elf.mirai","question":"Which sorts of equipment are in its victim population?","ids":["description:2"]},
+  {"family":"elf.mirai","question":"What operating system is mentioned?","ids":["description:0"]},
+  {"family":"win.cobalt_strike","question":"Which channels can carry staging traffic?","ids":["description:3"]},
+  {"family":"win.cobalt_strike","question":"Why might payload inspection on disk miss Beacon?","ids":["description:2"]},
+  {"family":"win.cobalt_strike","question":"What loader development kit is named?","ids":["description:4"]},
+  {"family":"win.plugx","question":"Which evidence describes the remote administration features?","ids":["description:2"]},
+  {"family":"win.emotet","question":"Which two other malware families are named in the delivery example?","ids":["description:1"]},
+  {"family":"win.emotet","question":"What historical disruption is mentioned?","ids":["description:4"]},
+  {"family":"win.xworm","question":"Is there an alternate family name in the supplied record?","ids":[]},
+  {"family":"apk.flubot","question":"Can you attribute this family to an operator from this record?","ids":[]},
+  {"family":"win.emotet","question":"Has the analyst's machine been compromised?","ids":[]},
+  {"family":"win.cobalt_strike","question":"Which specific actor operated the Beacon I found?","ids":[]},
+  {"family":"elf.mirai","question":"Give the live botnet controller address.","ids":[]},
+  {"family":"win.emotet","question":"Is the cached description proof an indicator is malicious today?","ids":[]},
+  {"family":"win.plugx","question":"What other labels might a case note use for this family?","ids":["aliases"]},
+  {"family":"win.cobalt_strike","question":"Which record identifier should I use for a lookup?","ids":["identity"]},
+  {"family":"win.emotet","question":"Which group labels appear in Malpedia's association field?","ids":["attribution"]},
+  {"family":"win.xworm","question":"When was this cached metadata last updated?","ids":["record_updated"]}
+]

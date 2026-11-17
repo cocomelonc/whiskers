@@ -1,0 +1,7 @@
+{
+  "engine": "4.5.4",
+  "selected_training_rule_files": 90,
+  "demo_rule_files": 4,
+  "errors": [],
+  "scope": "Syntax compilation only; no malware execution, recall, or goodware FP test"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "whiskers-ti-0.6b-v0.1",
+  "sha256": "d11c0e620cf9bda778aba445dc9b6617112c0481b758919e5353a29031891eff",
+  "bytes": 396704608,
+  "dataset_sha256": "c622298c6a5c8bc9ac5af4a5add1b6038c09e767425e7404e526b4d7619a8a1b",
+  "base": "Qwen/Qwen3-0.6B",
+  "independent_whiskers_run": true
+}

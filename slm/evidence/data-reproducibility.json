@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-17",
+  "preparation_rerun_identical": true,
+  "compressed_sha256": {
+    "train.jsonl.gz": "2b75c3873fd6757aa322d5425467408d635751d797800e12172875b0b12da47f",
+    "validation.jsonl.gz": "1722a4aef158d16328e3fbeebf7ccb07631ec0c265285092362b329a6968bd47",
+    "test.jsonl.gz": "b8128725990dc0582f1ae633001ba3b935c2909e805e93fbd181aee6f396f57b",
+    "demo.jsonl.gz": "dc53d5646bfdc798de5252ca5c72699cccf7c84ae0ec875d59d1fc97c3195f1e"
+  },
+  "jsonl_sha256": {
+    "train": "c622298c6a5c8bc9ac5af4a5add1b6038c09e767425e7404e526b4d7619a8a1b",
+    "validation": "bd77f2c135fe4caa838b67c1072a40884b4ab127778ae07d9d1f78235db74cf1",
+    "test": "12b258d1054472e6784c48bdd625dc641909c5b5fbfadf9806c9fb5c62e04d34",
+    "demo": "3cf731a32724ee82e2a0c74225b55951151716013113cda75e4776b48d45e5c8"
+  },
+  "counts": {
+    "train": 1906,
+    "validation": 255,
+    "test": 236,
+    "demo": 59
+  },
+  "family_alias_groups_disjoint": true,
+  "original_snapshot_sha256": "eb735ce0c97faeddf29921528d6bdea5266957a82114ac9289af89159bd8fd94"
+}
