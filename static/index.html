@@ -652,7 +652,7 @@
               </div>
               <textarea id="slm-question" class="search-input slm-question" aria-label="Question for the TI SLM" placeholder="Ask a question about the supplied family evidence…" maxlength="600"></textarea>
               <div class="slm-toolbar">
-                <button id="slm-send" class="llm-btn" style="padding:8px 14px;">ask mini TI →</button>
+                <button id="slm-send" class="llm-btn" style="padding:8px 14px;">ask mini TI -></button>
                 <button id="slm-recheck" class="btn-back">check model</button>
                 <span id="slm-source-mode" style="margin-left:auto;font-size:.64rem;color:var(--dim);"></span>
               </div>
@@ -863,7 +863,7 @@
         const res = await fetch(`/api/similar/${encodeURIComponent(name)}`);
         if (!res.ok) return;
         const d = await res.json();
-        if (!d.families?.length) return;   // no embeddings → just stay hidden
+        if (!d.families?.length) return;   // no embeddings -> just stay hidden
         box.innerHTML = `
           <div style="padding:18px 24px;">
             <div class="label" style="margin-bottom:10px;">🧬 similar families · semantic</div>

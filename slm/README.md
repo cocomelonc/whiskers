@@ -141,7 +141,7 @@ Planning estimates, not Whiskers measurements:
 | Host RAM | 16 GiB minimum planning target; 32 GiB comfortable for merge/export |
 | Disk | 20–30 GiB free with a fresh CUDA Python environment, original base, merged/F16/Q4 files and build cache; about 5–10 GiB incremental if tools/base already exist |
 | CPU demo inference | target 2–4 GiB spare RAM; measure latency on the actual presentation laptop |
-| Finish model, review 20→100 manual questions, record video, package | 3–5 focused working days after GPU access |
+| Finish model, review 20->100 manual questions, record video, package | 3–5 focused working days after GPU access |
 
 `training-summary.json` records used/filtered rows, loss and peak PyTorch allocated memory. Allocated memory is not total process VRAM; retain `nvidia-smi` measurements too. CPU inference, 4-bit export and identical CUDA training seeds do not imply bit-identical weights across hardware/drivers.
 

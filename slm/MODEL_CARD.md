@@ -13,7 +13,7 @@
 | Completed run | 3 epochs; context 2048; microbatch 2; accumulation 8; AdamW lr 2e-4; seed 20261117 |
 | Dataset | `data/manifest.json`; 1,906 train / 255 validation / 236 test rows |
 | Reserved demo | 59 rows across six excluded family groups, plus 20 separately written questions |
-| Export | merged F16 GGUF → Q4_K_M |
+| Export | merged F16 GGUF -> Q4_K_M |
 | GGUF SHA-256 | `d11c0e620cf9bda778aba445dc9b6617112c0481b758919e5353a29031891eff` |
 | Raw neural evaluation | 231/236 template-heldout and 16/20 inspected manual questions; paired results under `evidence/comparison-canonical/` |
 | Physical Android evaluation | 15/20 strict selections, 20/20 contract-valid; median 9.46 s, p95 17.81 s on moto g54 5G; source policy disabled |
